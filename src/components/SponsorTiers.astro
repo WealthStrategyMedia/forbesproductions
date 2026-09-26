@@ -1,0 +1,204 @@
+---
+/**
+ * Sponsorship packages. "Sponsor Now" is a placeholder for the Tweeble
+ * checkout; it currently just reveals which package was picked.
+ */
+import { sponsorTiers } from '../data/event';
+
+interface Props { group: 'event' | 'film'; }
+const { group } = Astro.props;
+const tiers = sponsorTiers.filter((t) => t.group === group);
+const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
+---
+
+<div class="tiers" data-tiers>
+  {tiers.map((t) => (
+    <article class:list={['tier', 'card', t.featured && 'is-featured']} id={t.id}>
+      {t.featured && <p class="tier-flag">Most visibility</p>}
+
+      <header class="tier-head">
+        <h3 class="tier-name">{t.name}</h3>
+        <p class="tier-price">{money.format(t.price)}</p>
+        {t.headline && <p class="tier-headline">{t.headline}</p>}
+      </header>
+
+      <div class="tier-body">
+        {t.benefits.map((b) => (
+          <div class="benefit">
+            {b.heading && <h4 class="benefit-h">{b.heading}</h4>}
+            <ul>{b.items.map((i) => <li>{i}</li>)}</ul>
+          </div>
+        ))}
+      </div>
+
+      <footer class="tier-foot">
+        <button
+          class:list={['btn', 'btn-sm', !t.featured && 'btn-ghost']}
+          type="button"
+          data-sponsor={t.name}
+          data-sponsor-price={t.price}
+        >
+          Sponsor Now
+        </button>
+        <a class="link-arrow" href="#sponsor">
+          Ask a question
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+        </a>
+      </footer>
+    </article>
+  ))}
+</div>
+
+<p class="tier-result" data-sponsor-result role="status" aria-live="polite" hidden></p>
+
+<style>
+  .tiers {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+    gap: clamp(1rem, 1.8vw, 1.75rem);
+    align-items: stretch;
+  }
+
+  .tier {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+    padding: clamp(1.5rem, 2.4vw, 2.2rem);
+  }
+
+  .tier.is-featured {
+    border-color: rgba(217, 178, 106, 0.45);
+    background:
+      radial-gradient(120% 70% at 50% 0%, rgba(217, 178, 106, 0.13) 0%, transparent 62%),
+      linear-gradient(180deg, var(--surface) 0%, var(--ink-2) 100%);
+  }
+
+  .tier:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+
+  .tier-flag {
+    align-self: flex-start;
+    margin: 0;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    background: var(--gold);
+    color: #14110a;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+
+  .tier-head { display: grid; gap: 0.45rem; }
+
+  .tier-name {
+    margin: 0;
+    font-family: var(--sans);
+    font-size: 0.76rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .tier-price {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(2.5rem, 3.4vw, 3.4rem);
+    line-height: 1;
+    color: var(--paper);
+  }
+
+  .is-featured .tier-price { color: var(--gold-soft); }
+
+  .tier-headline {
+    margin: 0.35rem 0 0;
+    font-size: 0.9rem;
+    font-style: italic;
+    color: var(--muted);
+  }
+
+  .tier-body {
+    flex: 1;
+    display: grid;
+    gap: 1.1rem;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .benefit-h {
+    margin: 0 0 0.5rem;
+    font-family: var(--sans);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .benefit ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  .benefit li {
+    position: relative;
+    margin: 0;
+    padding-left: 1.4rem;
+    font-size: 0.89rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .benefit li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.62em;
+    width: 7px;
+    height: 7px;
+    border-radius: 2px;
+    background: var(--red);
+    transform: rotate(45deg);
+  }
+
+  .tier-foot {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .tier-result {
+    margin: 1.5rem 0 0;
+    padding: 0.95rem 1.2rem;
+    border-radius: var(--r);
+    border: 1px dashed rgba(217, 178, 106, 0.45);
+    background: rgba(217, 178, 106, 0.07);
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+</style>
+
+<script>
+  /*
+   * Placeholder sponsor checkout — replace with a Tweeble checkout session
+   * seeded from the package name and price. See PAYMENTS.md.
+   */
+  const results = document.querySelectorAll<HTMLElement>('[data-sponsor-result]');
+  document.addEventListener('click', (e) => {
+    const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-sponsor]');
+    if (!btn) return;
+    const scope = btn.closest('[data-tiers]')?.parentElement ?? document;
+    const out = scope.querySelector<HTMLElement>('[data-sponsor-result]') ?? results[0];
+    if (!out) return;
+    out.hidden = false;
+    out.textContent = `Preview only — sponsor checkout is not connected yet. Selected: ${btn.dataset.sponsor} at $${Number(btn.dataset.sponsorPrice).toLocaleString('en-US')}. Payment will be powered by Tweeble; in the meantime use the sponsor form below and we'll be in touch.`;
+    out.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  });
+</script>

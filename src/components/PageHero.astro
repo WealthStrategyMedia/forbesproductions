@@ -1,0 +1,88 @@
+---
+import { asset } from '../lib/media';
+
+interface Props {
+  eyebrow?: string;
+  title: string;
+  titleAccent?: string;
+  lede?: string;
+  media?: string;
+  /** 'band' is a compact page header; 'full' is a tall cinematic hero. */
+  variant?: 'band' | 'full';
+  align?: 'left' | 'center';
+}
+
+const { eyebrow, title, titleAccent, lede, media, variant = 'band', align = 'left' } = Astro.props;
+const a = media ? asset(media) : null;
+---
+
+<section class:list={['hero', `hero-${variant}`, `align-${align}`, 'grain']}>
+  {a && (
+    <div class="hero-bg" aria-hidden="true">
+      <img src={a.full} width={a.width} height={a.height} alt="" fetchpriority="high" decoding="async" />
+    </div>
+  )}
+
+  <div class="wrap hero-inner">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1>
+      {title}
+      {titleAccent && <><br /><span class="accent">{titleAccent}</span></>}
+    </h1>
+    {lede && <p class="lede hero-lede">{lede}</p>}
+    <div class="hero-slot"><slot /></div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background: var(--ink-2);
+    isolation: isolate;
+  }
+
+  .hero-band { padding-block: clamp(3.5rem, 8vw, 7.5rem); }
+  .hero-full { padding-block: clamp(5rem, 14vw, 11rem); }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+  }
+
+  .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 32%;
+    filter: saturate(0.6) contrast(1.05) brightness(0.52);
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(75% 90% at 18% 10%, rgba(216, 20, 51, 0.22) 0%, transparent 58%),
+      linear-gradient(180deg, rgba(8, 7, 11, 0.55) 0%, rgba(8, 7, 11, 0.8) 62%, var(--ink) 100%);
+  }
+
+  .hero-inner { position: relative; }
+  .align-center .hero-inner { text-align: center; }
+  .align-center .eyebrow { justify-content: center; }
+  .align-center .hero-lede { margin-inline: auto; }
+
+  .hero h1 { margin-bottom: 0; max-width: 20ch; }
+  .align-center h1 { margin-inline: auto; }
+
+  .accent {
+    font-style: italic;
+    color: var(--gold-soft);
+  }
+
+  .hero-lede { margin-top: 1.6rem; }
+
+  .hero-slot:not(:empty) { margin-top: 2.25rem; }
+</style>

@@ -1,0 +1,464 @@
+---
+import Base from '../../layouts/Base.astro';
+import Figure from '../../components/Figure.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import TicketPicker from '../../components/TicketPicker.astro';
+import SponsorTiers from '../../components/SponsorTiers.astro';
+import StubForm from '../../components/StubForm.astro';
+import PartnerStrip from '../../components/PartnerStrip.astro';
+import PendingNotice from '../../components/PendingNotice.astro';
+import { event } from '../../data/event';
+import { asset } from '../../lib/media';
+import galleries from '../../data/galleries.json';
+
+const hero = asset(event.hero);
+const nightPhotos = [...galleries.items.redcarpet, ...galleries.items.fashion];
+
+const eventSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Event',
+  name: event.title,
+  description: event.intro[0],
+  startDate: event.dateISO,
+  endDate: event.endISO,
+  eventStatus: 'https://schema.org/EventScheduled',
+  eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+  image: new URL('/media/full/ei.webp', 'https://forbesproductions.us').href,
+  location: {
+    '@type': 'Place',
+    name: event.venue,
+    address: { '@type': 'PostalAddress', streetAddress: '6801 Hollywood Blvd #407', addressLocality: 'Hollywood', addressRegion: 'CA', postalCode: '90028', addressCountry: 'US' },
+  },
+  organizer: { '@type': 'Organization', name: 'Forbes Productions US', url: 'https://forbesproductions.us' },
+};
+
+const mediaFields = [
+  { type: 'text', name: 'name', label: 'Full name', required: true, half: true, autocomplete: 'name' },
+  { type: 'text', name: 'organisation', label: 'Media organisation / publication', required: true, half: true },
+  { type: 'email', name: 'email', label: 'Email', required: true, half: true, autocomplete: 'email' },
+  { type: 'tel', name: 'phone', label: 'Phone', half: true, autocomplete: 'tel' },
+  { type: 'url', name: 'links', label: 'Website / portfolio / social links' },
+  { type: 'checkboxes', name: 'coverage', label: 'Type of coverage', options: ['Photography', 'Video', 'Article', 'Social media', 'Other'] },
+  { type: 'textarea', name: 'notes', label: 'Additional notes', rows: 4 },
+] as const;
+
+const sponsorFields = [
+  { type: 'text', name: 'name', label: 'Contact name', required: true, half: true, autocomplete: 'name' },
+  { type: 'text', name: 'company', label: 'Company / brand', required: true, half: true, autocomplete: 'organization' },
+  { type: 'email', name: 'email', label: 'Email', required: true, half: true, autocomplete: 'email' },
+  { type: 'tel', name: 'phone', label: 'Phone', half: true, autocomplete: 'tel' },
+  { type: 'url', name: 'website', label: 'Website' },
+  {
+    type: 'select',
+    name: 'package',
+    label: 'Package of interest',
+    required: true,
+    options: [
+      'Platinum Sponsor — $5,000', 'Gold Sponsor — $2,500', 'Silver Sponsor — $1,200', 'Bronze Sponsor — $600',
+      'Fashion Designers — $600', 'Vendor Opportunity — $250', 'Film & Vendor — $800', 'Film Bronze — $1,000',
+      'Film Silver — $5,000', 'Film Gold — $10,000', 'Film Platinum — $25,000', 'Film Executive — $50,000',
+      'Not sure yet — please advise',
+    ],
+  },
+  { type: 'textarea', name: 'message', label: 'Tell us about your brand', rows: 5 },
+  { type: 'consent', name: 'consent', label: 'I agree to the <a href="/privacy-policy">Privacy Policy</a> and understand my information will be used to respond to my enquiry.', required: true },
+] as const;
+---
+
+<Base
+  title="Stained Red Carpet"
+  description="The Stained Red Carpet — Hollywood's ultimate celebrity experience. Comedy, fashion and philanthropy at The Kookaburra Lounge. Tickets and sponsorship packages."
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(eventSchema)} />
+
+  <!-- ─────────────────────────────────────────────────────────── hero -->
+  <section class="ehero grain">
+    <div class="ehero-bg" aria-hidden="true">
+      <img src={hero.full} width={hero.width} height={hero.height} alt="" fetchpriority="high" decoding="async" />
+    </div>
+
+    <div class="wrap ehero-inner">
+      <p class="eyebrow">Presented by {event.presentedBy}</p>
+      <h1>Stained<br /><span class="em">Red Carpet</span></h1>
+      <p class="lede">{event.subtitle}</p>
+
+      <dl class="ehero-meta">
+        <div><dt>Date</dt><dd>{event.dateLabel}</dd></div>
+        <div><dt>Venue</dt><dd>{event.venue}</dd></div>
+        <div><dt>Address</dt><dd>{event.address}</dd></div>
+      </dl>
+
+      <div class="btn-row">
+        <a class="btn btn-lg" href="#tickets">Purchase Tickets</a>
+        <a class="btn btn-lg btn-ghost" href="#sponsor">Become a Sponsor</a>
+        <a class="btn btn-lg btn-ghost" href={event.sponsorExternal} target="_blank" rel="noopener noreferrer">Sponsor via Relief Alliance</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────────────── intro -->
+  <section class="section">
+    <div class="wrap two">
+      <div data-reveal>
+        <p class="eyebrow">The night</p>
+        <h2>Hollywood&rsquo;s Ultimate<br /><span class="em">Celebrity Experience</span></h2>
+      </div>
+      <div class="prose" data-reveal style="--reveal-delay:110ms">
+        {event.intro.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────────────────────────────────── experience -->
+  <section class="section band">
+    <div class="wrap exp">
+      <div data-reveal>
+        <p class="eyebrow">On the night</p>
+        <h2>Experience the Night</h2>
+        <ul class="ticks">
+          {event.experience.map((i) => <li>{i}</li>)}
+        </ul>
+      </div>
+      <div class="exp-media" data-reveal style="--reveal-delay:110ms">
+        <Figure media={event.hero} alt="The Stained Red Carpet" ratio="4 / 3" sizes="(max-width: 1000px) 92vw, 42vw" />
+        <Figure media="6-1" alt="Guests on the Stained Red Carpet" ratio="4 / 3" sizes="(max-width: 1000px) 92vw, 42vw" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────────── tickets -->
+  <section class="section" id="tickets">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Tickets</p>
+          <h2>Grab Your Spot<br /><span class="em">on the Carpet</span></h2>
+        </div>
+        <div class="tix-intro">
+          <p class="lede">
+            Discounted ticket pricing thanks to the designated charity partnership with Forbes Productions.
+            Every ticket sold helps support Relief Alliance&rsquo;s programs.
+          </p>
+          <ul class="ticks ticks-sm">
+            {event.ticketPerks.map((p) => <li>{p}</li>)}
+          </ul>
+        </div>
+      </div>
+
+      <div data-reveal><TicketPicker /></div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────── why sponsor -->
+  <section class="section band">
+    <div class="wrap two">
+      <div data-reveal>
+        <p class="eyebrow">Return on the room</p>
+        <h2>Why Sponsor<br /><span class="em">or Attend</span></h2>
+        <ul class="ticks">{event.whySponsor.map((i) => <li>{i}</li>)}</ul>
+      </div>
+
+      <div data-reveal style="--reveal-delay:110ms">
+        <p class="eyebrow">Wealth Strategy Media</p>
+        <h2>Amplifying<br /><span class="em">Your Presence</span></h2>
+        <dl class="wsm">
+          {event.wealthStrategy.map(([k, v]) => (
+            <div><dt>{k}</dt><dd>{v}</dd></div>
+          ))}
+        </dl>
+        <div class="btn-row">
+          <a class="btn btn-ghost" href="https://wealthstrategymedia.com/" target="_blank" rel="noopener noreferrer">Wealth Strategy Media</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────── sponsor tiers -->
+  <section class="section" id="sponsor">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Sponsor packages</p>
+          <h2>Event Sponsorship</h2>
+        </div>
+        <p class="lede">Stage time, step-and-repeat placement, runway shows and full media coverage. Receipt provided.</p>
+      </div>
+      <div data-reveal><SponsorTiers group="event" /></div>
+
+      <div class="film-tiers" data-reveal>
+        <div class="section-head split">
+          <div>
+            <p class="eyebrow">Film packages</p>
+            <h2>Natasha: Escape to America</h2>
+          </div>
+          <a class="link-arrow" href="/natasha">
+            About the film
+            <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+          </a>
+        </div>
+        <SponsorTiers group="film" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────── sponsor enquiry -->
+  <section class="section band" id="sponsor-form">
+    <div class="wrap form-wrap">
+      <div class="form-side" data-reveal>
+        <p class="eyebrow">Sponsor form</p>
+        <h2>Let&rsquo;s Build<br /><span class="em">Your Package</span></h2>
+        <p class="lede">
+          Tell us about your brand and we will come back with a tailored package, deliverables and timings.
+        </p>
+        <ul class="ticks ticks-sm">{event.pressOpportunities.map((p) => <li>{p}</li>)}</ul>
+      </div>
+      <div class="form-body card" data-reveal style="--reveal-delay:110ms">
+        <StubForm id="sponsor-enquiry" fields={sponsorFields as any} submitLabel="Send sponsor enquiry" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────── press signup -->
+  <section class="section" id="press">
+    <div class="wrap form-wrap">
+      <div class="form-side" data-reveal>
+        <p class="eyebrow">Press &amp; media</p>
+        <h2>Media Coverage<br /><span class="em">Signup</span></h2>
+        <p class="lede">
+          Photographers, videographers, writers and creators — apply for accreditation and carpet access.
+        </p>
+      </div>
+      <div class="form-body card" data-reveal style="--reveal-delay:110ms">
+        <StubForm id="media-application" fields={mediaFields as any} submitLabel="Submit media application" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────── unmissable -->
+  <section class="section band">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">💥 Why it stands out</p>
+        <h2>Why It&rsquo;s Unmissable</h2>
+      </div>
+
+      <div class="why-grid">
+        {[...event.unmissable, ...event.standsOut].map(([t, b], i) => (
+          <article class="why card" data-reveal style={`--reveal-delay:${(i % 4) * 90}ms`}>
+            <h3>{t}</h3>
+            <p>{b}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="who" data-reveal>
+        <div>
+          <h3>🎟 Who walks the Stained Red Carpet?</h3>
+          <ul class="ticks">{event.whoWalks.map((w) => <li>{w}</li>)}</ul>
+        </div>
+        <div>
+          <h3>📸 Opportunities for sponsors &amp; press</h3>
+          <ul class="ticks">{event.pressOpportunities.map((w) => <li>{w}</li>)}</ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────────────────────────────────── photo wall -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Archive</p>
+          <h2>Past Shows</h2>
+        </div>
+        <p class="lede">{nightPhotos.length} frames from previous Stained Red Carpet nights. Tap any image to open it.</p>
+      </div>
+      <div data-reveal><PhotoGrid items={nightPhotos} context="Stained Red Carpet" row={240} min={300} /></div>
+    </div>
+  </section>
+
+  <PartnerStrip title="Our Partners" eyebrow="Powered by" />
+
+  <section class="section cta">
+    <div class="wrap cta-inner" data-reveal>
+      <h2>Be Part of the Movement</h2>
+      <p class="lede">
+        This isn&rsquo;t just a red carpet. It&rsquo;s a night where your brand, your presence and your impact get
+        national attention while supporting people in need.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-lg" href="#tickets">Get tickets</a>
+        <a class="btn btn-lg btn-ghost" href="#sponsor-form">Become a sponsor</a>
+      </div>
+      <div class="cta-note"><PendingNotice kind="payment" /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .em { font-style: italic; color: var(--gold-soft); }
+  .band { background: var(--ink-2); border-block: 1px solid var(--line); }
+
+  .section-head.split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem 3rem;
+  }
+  .section-head.split .lede { max-width: 46ch; }
+
+  /* --------------------------------------------------------------- hero -- */
+  .ehero {
+    position: relative;
+    padding-block: clamp(4rem, 10vw, 9rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .ehero-bg { position: absolute; inset: 0; z-index: -2; }
+
+  .ehero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 35%;
+    filter: saturate(0.8) brightness(0.55);
+  }
+
+  .ehero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(70% 80% at 14% 40%, rgba(216, 20, 51, 0.32) 0%, transparent 62%),
+      linear-gradient(100deg, rgba(8, 7, 11, 0.93) 0%, rgba(8, 7, 11, 0.76) 52%, rgba(8, 7, 11, 0.45) 100%),
+      linear-gradient(180deg, transparent 58%, var(--ink) 100%);
+  }
+
+  .ehero-inner { position: relative; max-width: 58rem; }
+  .ehero h1 { font-size: clamp(2.8rem, 1.2rem + 5.8vw, 6.6rem); }
+  .ehero .lede { margin-top: 1.1rem; font-family: var(--display); font-style: italic; font-size: clamp(1.2rem, 2vw, 1.85rem); color: var(--gold-soft); }
+
+  .ehero-meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: 1.1rem 2rem;
+    margin: 2.25rem 0;
+    padding-block: 1.6rem;
+    border-block: 1px solid var(--line);
+  }
+
+  .ehero-meta div { display: grid; gap: 0.25rem; }
+
+  .ehero-meta dt {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .ehero-meta dd { margin: 0; font-size: 0.95rem; color: var(--muted); }
+
+  /* ------------------------------------------------------------ layout -- */
+  .two {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .exp { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(2rem, 4vw, 4rem); align-items: center; }
+  .exp-media { display: grid; gap: clamp(0.75rem, 1.4vw, 1.25rem); }
+  .exp-media :global(.fig) { border-radius: var(--r); overflow: hidden; }
+
+  .ticks { margin: 1.5rem 0 0; padding: 0; list-style: none; display: grid; gap: 0.7rem; }
+
+  .ticks li {
+    position: relative;
+    margin: 0;
+    padding-left: 1.7rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .ticks li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.52em;
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    background: var(--red);
+    transform: rotate(45deg);
+  }
+
+  .ticks-sm li { font-size: 0.9rem; }
+
+  .tix-intro { max-width: 48ch; }
+  .tix-intro .ticks { margin-top: 1.1rem; }
+
+  .wsm { display: grid; gap: 0.9rem; margin: 1.6rem 0 0; }
+
+  .wsm div {
+    display: grid;
+    gap: 0.15rem;
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--gold);
+  }
+
+  .wsm dt { font-size: 0.9rem; font-weight: 600; }
+  .wsm dd { margin: 0; font-size: 0.87rem; color: var(--muted); }
+
+  .film-tiers { margin-top: clamp(3rem, 5vw, 5rem); padding-top: clamp(2rem, 3vw, 3rem); border-top: 1px solid var(--line); }
+
+  /* ------------------------------------------------------------- forms -- */
+  .form-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: start;
+  }
+
+  .form-side { position: sticky; top: calc(var(--header-h) + 1.5rem); }
+  .form-body { padding: clamp(1.5rem, 2.6vw, 2.5rem); }
+
+  /* -------------------------------------------------------------- why --- */
+  .why-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: clamp(1rem, 1.6vw, 1.5rem);
+  }
+
+  .why { padding: clamp(1.35rem, 2.1vw, 1.9rem); }
+  .why h3 { font-size: 1.15rem; margin-bottom: 0.45rem; }
+  .why p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+
+  .who {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: clamp(2rem, 4vw, 4rem);
+    margin-top: clamp(2.5rem, 4vw, 4rem);
+  }
+
+  .who h3 { font-size: 1.35rem; }
+
+  .cta {
+    text-align: center;
+    background: radial-gradient(60% 100% at 50% 100%, rgba(216, 20, 51, 0.22) 0%, transparent 62%), var(--ink-2);
+    border-top: 1px solid var(--line);
+  }
+
+  .cta-inner .lede { margin: 1.2rem auto 2rem; }
+  .cta-inner .btn-row { justify-content: center; }
+  .cta-note { max-width: 46rem; margin: 2.25rem auto 0; text-align: left; }
+
+  @media (max-width: 1000px) {
+    .two, .exp, .form-wrap { grid-template-columns: 1fr; }
+    .form-side { position: static; }
+  }
+</style>

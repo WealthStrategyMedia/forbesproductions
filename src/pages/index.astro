@@ -1,0 +1,604 @@
+---
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import PhotoRail from '../components/PhotoRail.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import EventCard from '../components/EventCard.astro';
+import PressCard from '../components/PressCard.astro';
+import PartnerStrip from '../components/PartnerStrip.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import { asset } from '../lib/media';
+import { site } from '../data/site';
+import { press, services, natasha, brooke } from '../data/content';
+import galleries from '../data/galleries.json';
+
+const hero = asset('great-2-red-carpet');
+
+const spotlight = [
+  'great-2-red-carpet', 'models-red-carpet-sexy', 'audience-great-shot', 'fashion-show-2025',
+  'guys-fashion-show-stage', 'red-carpet-bike', 'girls-swimsuits-show-stage-mansion',
+  'shows-guests-and-models', 'photo-copy-7', 'event-1', 'audience-sept-28-2025',
+  'fashion-runway-guys', 'model-red-carpet', 'great-5-copy',
+];
+
+const teaser = [...galleries.items.redcarpet.slice(0, 8), ...galleries.items.fashion.slice(0, 4)];
+const featured = press.slice(0, 3);
+---
+
+<Base title={site.name} description={site.description}>
+  <!-- ─────────────────────────────────────────────────────────────── hero -->
+  <section class="hero grain">
+    <div class="hero-bg" aria-hidden="true">
+      <img src={hero.full} width={hero.width} height={hero.height} alt="" fetchpriority="high" decoding="async" />
+    </div>
+
+    <div class="wrap hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow">Brooke Forbes · Lighting up Hollywood</p>
+        <h1>Beyond Content<br /><span class="hero-em">It&rsquo;s an Experience</span></h1>
+        <p class="lede hero-lede">
+          A Hollywood-crafted production house delivering high-impact film, theatre, stand-up comedy and
+          red carpet experiences. <strong>Female driven. Cinematic taste. Unapologetically bold.</strong>
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-lg" href="/events/stained-red-carpet#tickets">Purchase Tickets</a>
+          <a class="btn btn-lg btn-ghost" href="#services">Explore Services</a>
+          <a class="btn btn-lg btn-ghost" href="/gallery">View Gallery</a>
+        </div>
+
+        <dl class="hero-stats">
+          <div><dt>Award-winning</dt><dd>6× actress, writer &amp; producer</dd></div>
+          <div><dt>Feature film</dt><dd>Natasha: Escape to America</dd></div>
+          <div><dt>Purpose</dt><dd>Proceeds support Relief Alliance</dd></div>
+        </dl>
+      </div>
+
+      <div class="hero-poster" data-reveal>
+        <Figure
+          media={natasha.poster}
+          alt="Poster for Natasha Mail Order Bride: Escape to America"
+          fit="auto"
+          large
+          loading="eager"
+          sizes="(max-width: 1100px) 60vw, 26vw"
+          class="poster-fig"
+        />
+        <p class="hero-poster-cap">
+          <span>Coming 2026</span>
+          Natasha: Escape to America
+        </p>
+      </div>
+    </div>
+
+    <a class="hero-scroll" href="#spotlight" aria-label="Scroll to spotlight moments">
+      <span></span>
+    </a>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────────── spotlight -->
+  <section class="section" id="spotlight">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Red Carpet</p>
+          <h2>Spotlight Moments</h2>
+        </div>
+        <p class="lede">
+          Select stills from premieres, step-and-repeat moments and press features.
+          Tap any frame to open it full size.
+        </p>
+      </div>
+    </div>
+    <PhotoRail items={spotlight} context="Stained Red Carpet" label="Spotlight moments" />
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────── intro -->
+  <section class="section intro">
+    <div class="wrap intro-grid">
+      <div data-reveal>
+        <p class="eyebrow">From screen to stage</p>
+        <h2>Brooke Forbes shines with heart, humour and the visionary touch of Forbes Productions.</h2>
+      </div>
+
+      <div class="prose intro-body" data-reveal style="--reveal-delay:120ms">
+        <p>
+          Brooke Forbes is a <strong>6× award-winning actress, comedian, writer and producer</strong> whose magnetic
+          energy and undeniable talent have made her one of Hollywood&rsquo;s most captivating forces. With a gift for
+          blending heartfelt emotion and comedic brilliance, Brooke brings depth, laughter and humanity to every role
+          she takes on.
+        </p>
+        <p>
+          Through her company, <strong>Forbes Productions</strong>, Brooke creates and stars in powerful films,
+          award-winning original musicals, celebrity comedy stand-up shows and red carpet events that inspire and
+          entertain audiences worldwide. Guided by compassion and creativity, her work shines with purpose — proving
+          that entertainment can uplift, unite and give back to the world.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-ghost" href="/about">Learn more</a>
+          <a class="btn btn-ghost" href="/brooke-forbes">Meet Brooke</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────── event -->
+  <section class="section event-band">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Next on the carpet</p>
+        <h2>Upcoming Event</h2>
+      </div>
+      <div data-reveal><EventCard variant="compact" /></div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────────── services -->
+  <section class="section services" id="services">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Cinematic Production</p>
+          <h2>From concept to carpet</h2>
+        </div>
+        <p class="lede">We plan, produce and promote — with a crew, a camera package and a press list that turn an idea into an event.</p>
+      </div>
+
+      <div class="svc-grid">
+        {services.map((s, i) => (
+          <article class="svc card" data-reveal style={`--reveal-delay:${i * 110}ms`}>
+            <Figure media={s.media} alt={s.title} ratio="16 / 10" sizes="(max-width: 900px) 92vw, 31vw" zoom={false} />
+            <div class="svc-body">
+              <h3>{s.title}</h3>
+              <p>{s.body}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────── natasha -->
+  <section class="section film">
+    <div class="wrap film-grid">
+      <div class="film-copy" data-reveal>
+        <p class="eyebrow">{natasha.status}</p>
+        <h2 class="film-title">
+          Natasha<br /><span class="hero-em">Escape to America</span>
+        </h2>
+        <p class="lede">{natasha.logline}</p>
+        <p class="prose">{natasha.pitch[0]}</p>
+
+        <ul class="film-awards">
+          {natasha.awards.slice(0, 4).map(([fest, award]) => (
+            <li><strong>{award}</strong><span>{fest}</span></li>
+          ))}
+        </ul>
+
+        <div class="btn-row">
+          <a class="btn" href="/natasha">Explore the film</a>
+          <a class="btn btn-ghost" href={natasha.pitchDeck} target="_blank" rel="noopener noreferrer">Download pitch proposal</a>
+        </div>
+      </div>
+
+      <div class="film-media" data-reveal style="--reveal-delay:130ms">
+        <VideoEmbed provider="vimeo" id={natasha.vimeoId} title="Watch the reel" poster={natasha.still} />
+        <div class="film-stills" data-zoom-group>
+          {galleries.items.natasha.slice(0, 3).map((k) => (
+            <Figure media={k} context="Natasha: Escape to America" ratio="1 / 1" sizes="14vw" />
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────── brooke -->
+  <section class="section brooke-band">
+    <div class="wrap brooke-grid">
+      <div class="brooke-portrait" data-reveal>
+        <Figure media={brooke.headshot} alt="Brooke Forbes" fit="auto" large sizes="(max-width: 900px) 84vw, 36vw" />
+      </div>
+
+      <div class="brooke-copy" data-reveal style="--reveal-delay:120ms">
+        <p class="eyebrow">{brooke.role}</p>
+        <h2>Brooke Forbes</h2>
+        <blockquote class="brooke-quote">&ldquo;{brooke.quote}&rdquo;</blockquote>
+        <p class="prose">
+          Canadian-born actress, writer and producer Brooke Forbes is a bold creative force behind award-winning
+          films, hit TV projects and standout comedy performances alongside some of Hollywood&rsquo;s biggest names.
+        </p>
+        <div class="btn-row">
+          <a class="btn btn-ghost" href="/brooke-forbes">More information</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────────── press -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">In the press</p>
+          <h2>Latest Features</h2>
+        </div>
+        <a class="link-arrow" href="/news">
+          All news
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+
+      <div class="press-grid">
+        {featured.map((p, i) => (
+          <div data-reveal style={`--reveal-delay:${i * 110}ms`}>
+            <PressCard {...p} />
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────── channel CTA -->
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="channel card grain" data-reveal>
+        <div class="channel-copy">
+          <p class="eyebrow">Explore my channel</p>
+          <h2>Films, stand-up, star-studded events &amp; Hollywood magic</h2>
+          <p class="lede">
+            Click through to Forbes Productions on YouTube for exclusive films, stand-up comedy, star-studded
+            events, fashion, music and Hollywood magic.
+          </p>
+          <a class="btn" href={site.youtube} target="_blank" rel="noopener noreferrer">Explore my channel</a>
+        </div>
+        <Figure
+          media="photo-flyer-natasha-and-red-carpet-shoes-be189753"
+          alt="Forbes Productions channel artwork"
+          ratio="4 / 3"
+          sizes="(max-width: 900px) 92vw, 36vw"
+          class="channel-fig"
+        />
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────── gallery teaser -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Event gallery</p>
+          <h2>The room, the runway, the carpet</h2>
+        </div>
+        <a class="link-arrow" href="/gallery">
+          Browse the full gallery
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+      <div data-reveal>
+        <PhotoGrid items={teaser} context="Stained Red Carpet" row={250} min={300} />
+      </div>
+    </div>
+  </section>
+
+  <PartnerStrip />
+
+  <!-- ────────────────────────────────────────────────────────── outro -->
+  <section class="section cta-band">
+    <div class="wrap cta-inner" data-reveal>
+      <p class="eyebrow eyebrow-plain">Let&rsquo;s work together</p>
+      <h2>Ready to create something<br /><span class="hero-em">unforgettable?</span></h2>
+      <p class="lede">
+        Whether it&rsquo;s a feature film, a campaign or a red carpet event, we&rsquo;re here to bring your vision to life.
+      </p>
+      <div class="btn-row">
+        <a class="btn btn-lg" href="/contact">Start a conversation</a>
+        <a class="btn btn-lg btn-ghost" href="/events/stained-red-carpet#sponsor">Become a sponsor</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  /* ------------------------------------------------------------- hero --- */
+  .hero {
+    position: relative;
+    min-height: min(94svh, 980px);
+    display: flex;
+    align-items: center;
+    padding-block: clamp(4rem, 9vw, 8rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .hero-bg { position: absolute; inset: 0; z-index: -2; }
+
+  .hero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 62% 26%;
+    filter: saturate(0.82) contrast(1.06) brightness(0.8);
+    transform: scale(1.04);
+  }
+
+  /*
+   * Two-layer scrim: a hard wash behind the headline column so the type keeps
+   * AA contrast, fading to near-clear over the right third where the photo
+   * should be legible.
+   */
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(62% 75% at 10% 38%, rgba(216, 20, 51, 0.26) 0%, transparent 62%),
+      linear-gradient(100deg, rgba(8, 7, 11, 0.95) 0%, rgba(8, 7, 11, 0.86) 34%, rgba(8, 7, 11, 0.42) 62%, rgba(8, 7, 11, 0.24) 100%),
+      linear-gradient(180deg, rgba(8, 7, 11, 0.5) 0%, transparent 22%, transparent 62%, var(--ink) 100%);
+  }
+
+  .hero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(0, 0.65fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 5rem);
+  }
+
+  .hero-copy h1 { max-width: 14ch; }
+  .hero-em { font-style: italic; color: var(--gold-soft); }
+  .hero-lede { margin-top: 1.5rem; margin-bottom: 2.25rem; }
+  .hero-lede strong { color: var(--paper); font-weight: 500; }
+
+  .hero-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem 2.75rem;
+    margin: 3rem 0 0;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .hero-stats div { display: grid; gap: 0.2rem; }
+
+  .hero-stats dt {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .hero-stats dd { margin: 0; font-size: 0.92rem; color: var(--muted); }
+
+  .hero-poster { position: relative; }
+
+  .hero-poster :global(.poster-fig) {
+    border-radius: var(--r);
+    overflow: hidden;
+    box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.95);
+    border: 1px solid var(--line-strong);
+    transform: rotate(1.4deg);
+    transition: transform 0.6s var(--ease);
+  }
+
+  .hero-poster:hover :global(.poster-fig) { transform: rotate(0deg) translateY(-6px); }
+
+  .hero-poster-cap {
+    display: grid;
+    gap: 0.2rem;
+    margin: 1.1rem 0 0;
+    font-family: var(--display);
+    font-size: 1.05rem;
+    text-align: center;
+    color: var(--muted);
+  }
+
+  .hero-poster-cap span {
+    font-family: var(--sans);
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.26em;
+    text-transform: uppercase;
+    color: var(--red-bright);
+  }
+
+  .hero-scroll {
+    position: absolute;
+    left: 50%;
+    bottom: 1.6rem;
+    transform: translateX(-50%);
+    width: 26px;
+    height: 42px;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    display: grid;
+    place-items: start center;
+    padding-top: 8px;
+  }
+
+  .hero-scroll span {
+    width: 3px;
+    height: 8px;
+    border-radius: 999px;
+    background: var(--gold);
+    animation: scroll-hint 1.9s var(--ease) infinite;
+  }
+
+  @keyframes scroll-hint {
+    0%, 100% { transform: translateY(0); opacity: 1; }
+    60% { transform: translateY(14px); opacity: 0; }
+  }
+
+  @media (max-width: 1080px) {
+    .hero-inner { grid-template-columns: 1fr; }
+    .hero-poster { max-width: 320px; }
+    .hero-scroll { display: none; }
+  }
+
+  /*
+   * The horizontal scrim above only protects a left-hand column. On a phone the
+   * copy spans the full width, so swap in a flat wash plus a vertical fade.
+   */
+  @media (max-width: 780px) {
+    .hero::before {
+      background:
+        radial-gradient(90% 55% at 20% 28%, rgba(216, 20, 51, 0.28) 0%, transparent 65%),
+        linear-gradient(180deg, rgba(8, 7, 11, 0.9) 0%, rgba(8, 7, 11, 0.82) 55%, var(--ink) 100%);
+    }
+
+    .hero-bg img { filter: saturate(0.8) contrast(1.05) brightness(0.62); }
+    .hero-copy .btn-row .btn { width: 100%; }
+    .hero-stats { margin-top: 2.25rem; }
+  }
+
+  /* ---------------------------------------------------------- sections -- */
+  .section-head.split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem 3rem;
+  }
+
+  .section-head.split .lede { max-width: 46ch; }
+
+  .intro { background: linear-gradient(180deg, var(--ink) 0%, var(--ink-2) 100%); }
+
+  .intro-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .intro-grid h2 { font-size: clamp(1.8rem, 1.2rem + 2.2vw, 3.2rem); }
+  .intro-body .btn-row { margin-top: 1.9rem; }
+
+  .event-band { background: var(--ink-2); border-block: 1px solid var(--line); }
+
+  .svc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: clamp(1rem, 1.8vw, 1.75rem);
+  }
+
+  .svc { display: flex; flex-direction: column; }
+  .svc:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .svc-body { padding: clamp(1.3rem, 2vw, 1.9rem); }
+  .svc-body h3 { margin-bottom: 0.5rem; }
+  .svc-body p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+
+  /* ------------------------------------------------------------- film --- */
+  .film {
+    background:
+      radial-gradient(70% 60% at 82% 18%, rgba(216, 20, 51, 0.14) 0%, transparent 62%),
+      var(--ink-2);
+    border-block: 1px solid var(--line);
+  }
+
+  .film-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+  }
+
+  .film-title { font-size: clamp(2.4rem, 1.3rem + 4vw, 5rem); }
+  .film-copy .lede { margin-bottom: 1.5rem; }
+
+  .film-awards {
+    display: grid;
+    gap: 0.7rem;
+    margin: 2rem 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .film-awards li {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.1rem;
+    margin: 0;
+    padding-left: 1.2rem;
+    border-left: 2px solid var(--red);
+  }
+
+  .film-awards strong { font-size: 0.95rem; }
+  .film-awards span { font-size: 0.8rem; color: var(--faint); }
+
+  .film-media { display: grid; gap: clamp(0.6rem, 1vw, 1rem); }
+
+  .film-stills {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(0.6rem, 1vw, 1rem);
+  }
+
+  .film-stills :global(.fig) { border-radius: var(--r); overflow: hidden; }
+
+  /* ----------------------------------------------------------- brooke --- */
+  .brooke-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .brooke-portrait :global(.fig) {
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  .brooke-quote {
+    margin: 0 0 1.5rem;
+    padding-left: 1.4rem;
+    border-left: 2px solid var(--gold);
+    font-family: var(--display);
+    font-size: clamp(1.15rem, 1.6vw, 1.6rem);
+    font-style: italic;
+    line-height: 1.35;
+    color: var(--gold-soft);
+  }
+
+  /* ------------------------------------------------------------ press --- */
+  .press-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: clamp(1rem, 1.8vw, 1.75rem);
+  }
+
+  /* ---------------------------------------------------------- channel --- */
+  .channel {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    align-items: center;
+    gap: clamp(1.5rem, 3vw, 3.5rem);
+    padding: clamp(1.75rem, 3.2vw, 3.5rem);
+    background:
+      radial-gradient(80% 120% at 8% 50%, rgba(216, 20, 51, 0.16) 0%, transparent 60%),
+      linear-gradient(180deg, var(--surface) 0%, var(--ink-2) 100%);
+  }
+
+  .channel h2 { font-size: clamp(1.7rem, 1.2rem + 1.9vw, 2.9rem); }
+  .channel .lede { margin-bottom: 1.9rem; }
+  .channel :global(.channel-fig) { border-radius: var(--r); overflow: hidden; }
+
+  /* -------------------------------------------------------------- cta --- */
+  .cta-band {
+    text-align: center;
+    background:
+      radial-gradient(60% 100% at 50% 100%, rgba(216, 20, 51, 0.2) 0%, transparent 62%),
+      var(--ink-2);
+    border-top: 1px solid var(--line);
+  }
+
+  .cta-inner .eyebrow { justify-content: center; }
+  .cta-inner .lede { margin: 1.4rem auto 2.25rem; }
+  .cta-inner .btn-row { justify-content: center; }
+
+  @media (max-width: 1000px) {
+    .intro-grid, .film-grid, .brooke-grid, .channel { grid-template-columns: 1fr; }
+    .brooke-portrait { max-width: 480px; }
+  }
+</style>

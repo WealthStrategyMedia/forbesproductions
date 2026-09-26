@@ -1,0 +1,113 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { site } from '../data/site';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Absolute or root-relative image for social cards. */
+  ogImage?: string;
+  noindex?: boolean;
+  bodyClass?: string;
+}
+
+const {
+  title,
+  description = site.description,
+  ogImage = '/media/full/ei.webp',
+  noindex = false,
+  bodyClass = '',
+} = Astro.props;
+
+const fullTitle = title === site.name ? `${site.name} — ${site.tagline}` : `${title} | ${site.name}`;
+const canonical = new URL(Astro.url.pathname.replace(/\/+$/, '') || '/', Astro.site ?? site.url).href;
+const ogAbsolute = new URL(ogImage, Astro.site ?? site.url).href;
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: site.legalName,
+  alternateName: site.name,
+  url: site.url,
+  logo: new URL('/media/full/forbes-blk-transparent-copy-1.webp', site.url).href,
+  email: site.email,
+  telephone: site.phone,
+  slogan: site.tagline,
+  sameAs: [
+    'https://www.instagram.com/forbesproductionsllc/',
+    'https://www.facebook.com/brooke.forbes1',
+    'https://www.youtube.com/@BrookeForbes1',
+    'https://www.tiktok.com/@brookeforbes5',
+    'https://vimeo.com/brookeforbes',
+  ],
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <meta name="theme-color" content="#08070b" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogAbsolute} />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogAbsolute} />
+
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    <slot name="head" />
+  </head>
+
+  <body class={bodyClass}>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+    <Lightbox />
+
+    <script>
+      // Progressive scroll-reveal. Content is visible without JS because the
+      // observer only ever adds the "in" class; CSS hides it solely once JS
+      // has marked the document as capable.
+      const els = document.querySelectorAll<HTMLElement>('[data-reveal]');
+      if (els.length && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        const io = new IntersectionObserver(
+          (entries) => {
+            for (const e of entries) {
+              if (!e.isIntersecting) continue;
+              e.target.classList.add('is-in');
+              io.unobserve(e.target);
+            }
+          },
+          { rootMargin: '0px 0px -8% 0px', threshold: 0.06 },
+        );
+        els.forEach((el) => io.observe(el));
+      } else {
+        els.forEach((el) => el.classList.add('is-in'));
+      }
+    </script>
+
+    <noscript>
+      <style>[data-reveal] { opacity: 1 !important; transform: none !important; }</style>
+    </noscript>
+  </body>
+</html>

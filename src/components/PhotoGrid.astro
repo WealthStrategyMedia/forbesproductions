@@ -1,0 +1,156 @@
+---
+/**
+ * Mosaic of mirrored photos. Portrait frames take a double row so posters and
+ * step-and-repeat shots keep their shape instead of being cropped square.
+ * Every tile opens the shared lightbox, and arrow keys stay inside this grid.
+ */
+import { asset, describe } from '../lib/media';
+
+interface Props {
+  items: readonly string[];
+  context?: string;
+  /** Tile height in px at the widest breakpoint; scales down responsively. */
+  row?: number;
+  min?: number;
+  class?: string;
+  /** Render the first N eagerly (use on above-the-fold grids). */
+  eager?: number;
+  /**
+   * 'mosaic' crops tiles to a uniform rhythm — right for photographs.
+   * 'masonry' keeps every image's own aspect ratio — right for posters and
+   * flyers, where cropping would cut off the artwork's title block.
+   */
+  variant?: 'mosaic' | 'masonry';
+}
+
+const {
+  items,
+  context,
+  row = 230,
+  min = 320,
+  class: className = '',
+  eager = 0,
+  variant = 'mosaic',
+} = Astro.props;
+
+const tiles = items.map((key) => {
+  const a = asset(key);
+  return { key, a, tall: a.aspect < 0.88, wide: a.aspect > 2.1 };
+});
+---
+
+<div
+  class:list={['grid', `is-${variant}`, className]}
+  style={`--row:${row}px; --min:${min}px`}
+  data-zoom-group
+>
+  {tiles.map(({ key, a, tall, wide }, i) => (
+    <button
+      type="button"
+      class:list={['tile', variant === 'mosaic' && tall && 'tall', variant === 'mosaic' && wide && 'wide']}
+      style={variant === 'masonry' ? `--nat:${a.aspect}` : undefined}
+      data-zoom={a.full}
+      data-zoom-w={a.width}
+      data-zoom-h={a.height}
+      data-zoom-alt={describe(key, context)}
+      aria-label={`Enlarge: ${describe(key, context)}`}
+    >
+      <img
+        src={a.thumb}
+        width={a.width}
+        height={a.height}
+        alt={describe(key, context)}
+        loading={i < eager ? 'eager' : 'lazy'}
+        decoding="async"
+        sizes="(max-width: 640px) 92vw, (max-width: 1100px) 46vw, 27vw"
+      />
+      <span class="tile-glow" aria-hidden="true"></span>
+    </button>
+  ))}
+</div>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--min), 1fr));
+    grid-auto-rows: var(--row);
+    grid-auto-flow: dense;
+    gap: clamp(0.5rem, 0.9vw, 1rem);
+  }
+
+  /* Column masonry: posters keep their own proportions and nothing is cropped. */
+  .is-masonry {
+    display: block;
+    columns: auto var(--min);
+    column-gap: clamp(0.5rem, 0.9vw, 1rem);
+  }
+
+  .is-masonry .tile {
+    width: 100%;
+    margin-bottom: clamp(0.5rem, 0.9vw, 1rem);
+    break-inside: avoid;
+    aspect-ratio: var(--nat);
+  }
+
+  .is-masonry .tile img { object-fit: contain; background: #0b0910; }
+
+  .tile {
+    position: relative;
+    padding: 0;
+    border: 0;
+    border-radius: var(--r);
+    overflow: hidden;
+    background: var(--surface);
+    cursor: zoom-in;
+    grid-row: span 1;
+    isolation: isolate;
+  }
+
+  .tile.tall { grid-row: span 2; }
+  .tile.wide { grid-column: span 2; }
+
+  .tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.85s var(--ease), filter 0.5s var(--ease);
+    filter: saturate(0.92) contrast(1.02);
+  }
+
+  .tile:hover img,
+  .tile:focus-visible img {
+    transform: scale(1.06);
+    filter: saturate(1.06) contrast(1.04);
+  }
+
+  .tile-glow {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    box-shadow: inset 0 0 0 1px var(--line);
+    background: linear-gradient(180deg, transparent 55%, rgba(4, 3, 6, 0.55) 100%);
+    opacity: 0.85;
+    transition: opacity 0.4s var(--ease), box-shadow 0.4s var(--ease);
+    pointer-events: none;
+    border-radius: inherit;
+  }
+
+  .tile:hover .tile-glow,
+  .tile:focus-visible .tile-glow {
+    opacity: 1;
+    box-shadow: inset 0 0 0 1px rgba(216, 20, 51, 0.6);
+  }
+
+  @media (max-width: 1100px) {
+    .grid { --row: 200px; --min: 240px; }
+    .tile.wide { grid-column: span 1; }
+  }
+
+  @media (max-width: 640px) {
+    .grid {
+      --row: 150px;
+      --min: 0;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

@@ -1,0 +1,113 @@
+---
+import Base from '../../layouts/Base.astro';
+import PageHero from '../../components/PageHero.astro';
+import EventCard from '../../components/EventCard.astro';
+import PhotoGrid from '../../components/PhotoGrid.astro';
+import { event } from '../../data/event';
+import galleries from '../../data/galleries.json';
+
+const pastNight = [...galleries.items.redcarpet.slice(0, 6), ...galleries.items.fashion.slice(0, 6)];
+---
+
+<Base
+  title="Events"
+  description="Upcoming and past Forbes Productions events, including The Stained Red Carpet at The Kookaburra Lounge, Hollywood."
+>
+  <PageHero
+    eyebrow="Red carpet · comedy · fashion"
+    title="Events"
+    lede="A full-throttle evening of glitz, glamour and laughter — and a cause behind every ticket."
+    media="event-1"
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Upcoming</p>
+        <h2>Next on the Carpet</h2>
+      </div>
+      <div data-reveal><EventCard /></div>
+
+      <div class="quick" data-reveal>
+        <a class="quick-item" href={`/events/${event.slug}#tickets`}>
+          <span class="quick-k">Tickets</span>
+          <span class="quick-v">From $28.52</span>
+        </a>
+        <a class="quick-item" href={`/events/${event.slug}#sponsor`}>
+          <span class="quick-k">Sponsorship</span>
+          <span class="quick-v">$250 – $50,000</span>
+        </a>
+        <a class="quick-item" href={`/events/${event.slug}#press`}>
+          <span class="quick-k">Press &amp; media</span>
+          <span class="quick-v">Accreditation form</span>
+        </a>
+        <a class="quick-item" href="/event-gallery">
+          <span class="quick-k">Event gallery</span>
+          <span class="quick-v">Attendee downloads</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Last time</p>
+          <h2>Inside the Room</h2>
+        </div>
+        <a class="link-arrow" href="/gallery">
+          Full gallery
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+      <div data-reveal><PhotoGrid items={pastNight} context="Stained Red Carpet" row={250} min={300} /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .band { background: var(--ink-2); border-block: 1px solid var(--line); }
+
+  .section-head.split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem 3rem;
+  }
+
+  .quick {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: clamp(0.75rem, 1.4vw, 1.25rem);
+    margin-top: clamp(1.25rem, 2vw, 1.75rem);
+  }
+
+  .quick-item {
+    display: grid;
+    gap: 0.3rem;
+    padding: 1.25rem 1.4rem;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--surface);
+    text-decoration: none;
+    transition: border-color 0.3s var(--ease), transform 0.3s var(--ease), background 0.3s var(--ease);
+  }
+
+  .quick-item:hover {
+    border-color: rgba(216, 20, 51, 0.6);
+    background: var(--surface-2);
+    transform: translateY(-3px);
+  }
+
+  .quick-k {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .quick-v { font-family: var(--display); font-size: 1.25rem; }
+</style>

@@ -1,0 +1,222 @@
+---
+import Base from '../layouts/Base.astro';
+import PendingNotice from '../components/PendingNotice.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import { asset } from '../lib/media';
+import galleries from '../data/galleries.json';
+
+const bg = asset('audience-sept-28-2025');
+const preview = galleries.items.redcarpet.slice(0, 12);
+---
+
+<Base
+  title="Event Gallery"
+  description="Private event gallery for Forbes Productions guests, sponsors and press. Enter your access code to view and download full-resolution files."
+  noindex
+>
+  <section class="gate grain">
+    <div class="gate-bg" aria-hidden="true">
+      <img src={bg.full} width={bg.width} height={bg.height} alt="" fetchpriority="high" decoding="async" />
+    </div>
+
+    <div class="wrap gate-inner">
+      <div class="gate-card card" data-gate>
+        <p class="eyebrow">Guests · Sponsors · Press</p>
+        <h1>Event Gallery</h1>
+        <p class="lede">
+          Full-resolution photos, video, press files and links from the night — for attendees, sponsors and
+          accredited media. Enter the access code from your confirmation email.
+        </p>
+
+        <form class="gate-form" data-gate-form novalidate>
+          <p class="field">
+            <label for="eg-code">Access code</label>
+            <input id="eg-code" name="code" type="password" placeholder="Enter your code" autocomplete="off" required />
+          </p>
+          <button class="btn btn-lg" type="submit">Enter gallery</button>
+        </form>
+
+        <p class="gate-result" data-gate-result role="status" aria-live="polite" hidden></p>
+
+        <PendingNotice kind="form" />
+
+        <p class="gate-help">
+          Lost your code? <a href="/contact">Get in touch</a> and we&rsquo;ll resend it.
+        </p>
+      </div>
+
+      <!-- Shown after a successful unlock once the backend is wired. -->
+      <div class="gate-preview">
+        <div class="tabs" role="tablist" aria-label="Gallery sections">
+          <button class="tab is-on" type="button" role="tab" aria-selected="true">Photos</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" disabled>Videos</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" disabled>Files</button>
+          <button class="tab" type="button" role="tab" aria-selected="false" disabled>Links</button>
+        </div>
+
+        <p class="preview-note">
+          Preview of what guests see once unlocked. Uploads, downloads and the Videos, Files and Links tabs
+          are wired up with the rest of the Tweeble integration.
+        </p>
+
+        <PhotoGrid items={preview} context="Event gallery preview" row={220} min={260} />
+
+        <div class="upload">
+          <h2>Upload your photos</h2>
+          <p>Attendees can add their own shots from the night to the shared album.</p>
+          <div class="btn-row">
+            <button class="btn btn-ghost" type="button" aria-disabled="true" disabled>Select files</button>
+            <button class="btn btn-ghost" type="button" aria-disabled="true" disabled>Add a link</button>
+          </div>
+          <PendingNotice kind="form" compact />
+        </div>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .gate {
+    position: relative;
+    padding-block: clamp(3rem, 7vw, 6rem);
+    overflow: hidden;
+    isolation: isolate;
+    min-height: 70svh;
+  }
+
+  .gate-bg { position: absolute; inset: 0; z-index: -2; }
+
+  .gate-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.6) brightness(0.4) blur(3px);
+    transform: scale(1.06);
+  }
+
+  .gate::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: linear-gradient(180deg, rgba(8, 7, 11, 0.86) 0%, rgba(8, 7, 11, 0.94) 45%, var(--ink) 100%);
+  }
+
+  .gate-inner { display: grid; gap: clamp(2.5rem, 5vw, 4.5rem); }
+
+  .gate-card {
+    max-width: 44rem;
+    margin-inline: auto;
+    padding: clamp(1.75rem, 3.4vw, 3rem);
+    display: grid;
+    gap: 1.35rem;
+    text-align: center;
+    background: rgba(20, 17, 27, 0.78);
+    backdrop-filter: blur(14px);
+  }
+
+  .gate-card .eyebrow { justify-self: center; }
+  .gate-card h1 { font-size: clamp(2.2rem, 1.4rem + 3vw, 3.8rem); margin: 0; }
+  .gate-card .lede { margin-inline: auto; }
+
+  .gate-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    align-items: flex-end;
+  }
+
+  .field { display: grid; gap: 0.45rem; text-align: left; margin: 0; flex: 1 1 18rem; }
+
+  label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  input {
+    width: 100%;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--line-strong);
+    border-radius: var(--r);
+    background: rgba(8, 7, 11, 0.55);
+    color: var(--paper);
+    font: inherit;
+    letter-spacing: 0.2em;
+  }
+
+  input:focus { outline: none; border-color: var(--gold); }
+
+  .gate-result {
+    margin: 0;
+    padding: 0.85rem 1.1rem;
+    border-radius: var(--r);
+    border: 1px solid rgba(216, 20, 51, 0.45);
+    background: rgba(216, 20, 51, 0.12);
+    font-size: 0.87rem;
+  }
+
+  .gate-help { margin: 0; font-size: 0.83rem; color: var(--faint); }
+  .gate-help a { color: var(--gold-soft); }
+
+  /* ---------------------------------------------------------- preview -- */
+  .gate-preview { border-top: 1px solid var(--line); padding-top: clamp(2rem, 3.5vw, 3rem); }
+
+  .tabs { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem; }
+
+  .tab {
+    padding: 0.55rem 1.15rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    cursor: pointer;
+  }
+
+  .tab.is-on { background: var(--red); border-color: transparent; color: #fff; }
+  .tab[disabled] { opacity: 0.4; cursor: not-allowed; }
+
+  .preview-note {
+    max-width: 68ch;
+    margin: 0 0 1.5rem;
+    font-size: 0.87rem;
+    color: var(--faint);
+  }
+
+  .upload {
+    margin-top: clamp(2rem, 3.5vw, 3rem);
+    padding: clamp(1.4rem, 2.4vw, 2.2rem);
+    border: 1px dashed var(--line-strong);
+    border-radius: var(--r-lg);
+    display: grid;
+    gap: 1rem;
+    justify-items: start;
+  }
+
+  .upload h2 { margin: 0; font-size: clamp(1.3rem, 2vw, 1.8rem); }
+  .upload p { margin: 0; color: var(--muted); font-size: 0.92rem; }
+</style>
+
+<script>
+  /*
+   * Placeholder gate. Once Tweeble (or the chosen backend) is wired, validate
+   * the code server-side and swap the card for the unlocked gallery.
+   */
+  const form = document.querySelector<HTMLFormElement>('[data-gate-form]');
+  const out = document.querySelector<HTMLElement>('[data-gate-result]');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (!form.reportValidity() || !out) return;
+    out.hidden = false;
+    out.textContent =
+      'Access codes are not verified yet — this gate is a placeholder. A preview of the unlocked gallery is shown below.';
+  });
+</script>

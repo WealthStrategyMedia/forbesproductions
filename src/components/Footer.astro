@@ -1,0 +1,232 @@
+---
+import { site, socials, extraSocials, footerNav, credits } from '../data/site';
+import { asset } from '../lib/media';
+import SocialIcon from './SocialIcon.astro';
+
+const logo = asset('forbes-blk-transparent-copy-1');
+const relief = asset('relief-6-1-1');
+const year = new Date().getFullYear();
+---
+
+<footer class="ftr">
+  <div class="wrap">
+    <div class="ftr-top">
+      <div class="ftr-brand">
+        <a href="/" aria-label={`${site.name} — home`}>
+          <img src={logo.full} width={logo.width} height={logo.height} alt={site.name} loading="lazy" decoding="async" />
+        </a>
+        <p class="ftr-tag">{site.tagline}</p>
+        <p class="ftr-blurb">{site.description}</p>
+
+        <ul class="ftr-social" aria-label="Forbes Productions on social media">
+          {socials.map((s) => (
+            <li>
+              <a href={s.href} target="_blank" rel="noopener noreferrer" aria-label={s.label} title={s.label}>
+                <SocialIcon icon={s.icon} />
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <nav class="ftr-col" aria-label="Footer">
+        <h2 class="ftr-h">Explore</h2>
+        <ul>
+          {footerNav.map((l) => <li><a href={l.href}>{l.label}</a></li>)}
+        </ul>
+      </nav>
+
+      <div class="ftr-col">
+        <h2 class="ftr-h">Contact</h2>
+        <ul>
+          <li><a href={`mailto:${site.email}`}>{site.email}</a></li>
+          <li><a href={`tel:${site.phoneHref}`}>{site.phone}</a></li>
+          <li><a href="/contact">Send a message</a></li>
+        </ul>
+
+        <h2 class="ftr-h ftr-h-2">Projects</h2>
+        <ul>
+          {extraSocials.map((s) => (
+            <li>
+              <a href={s.href} target="_blank" rel="noopener noreferrer">
+                <SocialIcon icon={s.icon} size={13} />{s.label.replace(' on Facebook', '').replace(' on Instagram', '')}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="ftr-col ftr-cause">
+        <h2 class="ftr-h">Proudly supporting</h2>
+        <a class="ftr-relief" href="https://reliefalliance.org/" target="_blank" rel="noopener noreferrer">
+          <img src={relief.thumb} width={relief.width} height={relief.height} alt="Relief Alliance" loading="lazy" decoding="async" />
+        </a>
+        <p class="ftr-blurb">
+          A portion of all proceeds from Forbes Productions events and projects goes directly to Relief Alliance,
+          a 501(c)(3) nonprofit providing emergency and rehabilitative care across the United States.
+        </p>
+        <a class="btn btn-ghost btn-sm" href="/events/stained-red-carpet#sponsor">Become a sponsor</a>
+      </div>
+    </div>
+
+    <div class="ftr-bottom">
+      <p class="ftr-legal">© {year} {site.legalName}. All rights reserved.</p>
+      <p class="ftr-credit">
+        Developed by <a href={credits.developer.href} target="_blank" rel="noopener noreferrer">{credits.developer.name}</a>.
+        Media by <a href={credits.media.href} target="_blank" rel="noopener noreferrer">{credits.media.name}</a>.
+      </p>
+      <p class="ftr-links">
+        <a href="/privacy-policy">Privacy Policy</a>
+        <span aria-hidden="true">·</span>
+        <a href="/terms-and-conditions">Terms and Conditions</a>
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .ftr {
+    margin-top: auto;
+    padding-top: clamp(3rem, 6vw, 6rem);
+    padding-bottom: 2rem;
+    background:
+      radial-gradient(90% 120% at 50% 0%, rgba(216, 20, 51, 0.09) 0%, transparent 60%),
+      var(--ink-2);
+    border-top: 1px solid var(--line);
+  }
+
+  .ftr-top {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) repeat(3, minmax(0, 1fr));
+    gap: clamp(2rem, 4vw, 4rem);
+    padding-bottom: clamp(2.5rem, 4vw, 4rem);
+  }
+
+  .ftr-brand img {
+    width: auto;
+    height: 40px;
+    margin-bottom: 1.25rem;
+  }
+
+  .ftr-tag {
+    font-family: var(--display);
+    font-size: 1.25rem;
+    font-style: italic;
+    color: var(--gold-soft);
+    margin-bottom: 0.7rem;
+  }
+
+  .ftr-blurb {
+    font-size: 0.88rem;
+    line-height: 1.65;
+    color: var(--muted);
+    max-width: 44ch;
+  }
+
+  .ftr-social {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 1.5rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .ftr-social li { margin: 0; }
+
+  .ftr-social a {
+    display: grid;
+    place-items: center;
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--muted);
+    transition: color 0.25s var(--ease), border-color 0.25s var(--ease), background 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .ftr-social a:hover {
+    color: #fff;
+    background: var(--red);
+    border-color: transparent;
+    transform: translateY(-2px);
+  }
+
+  .ftr-h {
+    font-family: var(--sans);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0 0 1.1rem;
+  }
+
+  .ftr-h-2 { margin-top: 2rem; }
+
+  .ftr-col ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .ftr-col li { margin: 0; }
+
+  .ftr-col a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5em;
+    font-size: 0.88rem;
+    color: var(--muted);
+    text-decoration: none;
+    transition: color 0.2s var(--ease);
+  }
+
+  .ftr-col a:hover { color: var(--paper); }
+
+  .ftr-relief {
+    display: block;
+    width: fit-content;
+    margin-bottom: 1rem;
+  }
+
+  .ftr-relief img {
+    width: auto;
+    height: 46px;
+    opacity: 0.92;
+  }
+
+  .ftr-cause .btn { margin-top: 1.25rem; }
+
+  .ftr-bottom {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 2rem;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .ftr-bottom p {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--faint);
+  }
+
+  .ftr-bottom a { color: var(--muted); text-decoration: none; }
+  .ftr-bottom a:hover { color: var(--paper); text-decoration: underline; }
+  .ftr-links { display: flex; gap: 0.6rem; }
+
+  @media (max-width: 1024px) {
+    .ftr-top { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ftr-brand { grid-column: 1 / -1; }
+  }
+
+  @media (max-width: 620px) {
+    .ftr-top { grid-template-columns: 1fr; }
+    .ftr-bottom { flex-direction: column; align-items: flex-start; }
+  }
+</style>

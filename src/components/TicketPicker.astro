@@ -1,0 +1,337 @@
+---
+/**
+ * Ticket selector and live order summary.
+ *
+ * Quantities and totals are computed client-side purely so the flow can be
+ * reviewed; the checkout button is deliberately inert until the Tweeble
+ * integration lands (see PAYMENTS.md).
+ */
+import { tickets, event } from '../data/event';
+import PendingNotice from './PendingNotice.astro';
+---
+
+<div class="tix" id="tickets" data-tickets>
+  <div class="tix-list">
+    {tickets.map((t) => (
+      <div class:list={['tix-row', t.featured && 'is-featured']} data-ticket={t.id} data-price={t.price}>
+        <div class="tix-info">
+          <h3 class="tix-name">{t.name}</h3>
+          {t.detail && <p class="tix-detail">{t.detail}</p>}
+        </div>
+
+        <p class="tix-price">
+          <span class="cur">$</span>{t.price.toFixed(2).replace(/\.00$/, '')}
+        </p>
+
+        <div class="qty" role="group" aria-label={`Quantity for ${t.name}`}>
+          <button type="button" class="qty-btn" data-step="-1" aria-label={`Remove one ${t.name}`}>&minus;</button>
+          <input
+            class="qty-input"
+            type="number"
+            min="0"
+            max="50"
+            step="1"
+            value="0"
+            inputmode="numeric"
+            aria-label={`Number of ${t.name} tickets`}
+            data-qty
+          />
+          <button type="button" class="qty-btn" data-step="1" aria-label={`Add one ${t.name}`}>+</button>
+        </div>
+      </div>
+    ))}
+  </div>
+
+  <aside class="tix-summary card" aria-label="Order summary">
+    <h3 class="tix-sum-h">Order Summary</h3>
+
+    <ul class="tix-sum-list" data-summary>
+      {tickets.map((t) => (
+        <li data-sum-row={t.id} class="is-zero">
+          <span class="sum-name">{t.name}<span class="sum-q" data-sum-qty></span></span>
+          <span class="sum-amt" data-sum-amt>$0.00</span>
+        </li>
+      ))}
+    </ul>
+
+    <p class="tix-empty" data-empty>No tickets selected yet.</p>
+
+    <div class="tix-total">
+      <span>Total</span>
+      <strong data-total>$0.00</strong>
+    </div>
+
+    <button class="btn btn-lg tix-checkout" type="button" data-checkout>
+      Checkout
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M5 12h13M13 6l6 6-6 6" />
+      </svg>
+    </button>
+
+    <p class="tix-result" data-checkout-result role="status" aria-live="polite" hidden></p>
+
+    <PendingNotice kind="payment" compact />
+
+    <p class="tix-fine">
+      Every ticket supports Relief Alliance. {event.venue} · {event.dateLabel}.
+    </p>
+  </aside>
+</div>
+
+<style>
+  .tix {
+    display: grid;
+    grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.85fr);
+    gap: clamp(1.25rem, 2.5vw, 2.5rem);
+    align-items: start;
+  }
+
+  .tix-list { display: grid; gap: 0.75rem; }
+
+  .tix-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: clamp(1rem, 2vw, 2rem);
+    padding: clamp(1.1rem, 2vw, 1.6rem) clamp(1.1rem, 2.2vw, 1.85rem);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    background: linear-gradient(180deg, var(--surface) 0%, var(--ink-2) 100%);
+    transition: border-color 0.3s var(--ease), background 0.3s var(--ease);
+  }
+
+  .tix-row.is-featured { border-color: rgba(217, 178, 106, 0.4); }
+  .tix-row:has([data-qty]:not([value='0'])) { border-color: var(--line-strong); }
+  .tix-row.has-qty { border-color: rgba(216, 20, 51, 0.55); background: linear-gradient(180deg, rgba(216, 20, 51, 0.09) 0%, var(--ink-2) 100%); }
+
+  .tix-info { min-width: 0; }
+
+  .tix-name {
+    font-family: var(--display);
+    font-size: clamp(1.15rem, 1.5vw, 1.5rem);
+    margin: 0 0 0.15rem;
+  }
+
+  .tix-detail {
+    margin: 0;
+    font-size: 0.83rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--faint);
+  }
+
+  .tix-price {
+    margin: 0;
+    font-family: var(--display);
+    font-size: clamp(1.45rem, 2vw, 2rem);
+    color: var(--gold-soft);
+    white-space: nowrap;
+  }
+
+  .cur { font-size: 0.62em; vertical-align: 0.42em; margin-right: 0.08em; }
+
+  .qty {
+    display: inline-flex;
+    align-items: center;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    overflow: hidden;
+    background: rgba(8, 7, 11, 0.5);
+  }
+
+  .qty-btn {
+    width: 42px;
+    height: 44px;
+    border: 0;
+    background: transparent;
+    color: var(--paper);
+    font-size: 1.15rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s var(--ease), color 0.2s var(--ease);
+  }
+
+  .qty-btn:hover { background: var(--red); }
+
+  .qty-input {
+    width: 48px;
+    height: 44px;
+    border: 0;
+    border-inline: 1px solid var(--line);
+    background: transparent;
+    color: var(--paper);
+    text-align: center;
+    font: inherit;
+    font-variant-numeric: tabular-nums;
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
+
+  .qty-input::-webkit-outer-spin-button,
+  .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  .qty-input:focus { outline: none; background: rgba(245, 242, 235, 0.06); }
+
+  /* ------------------------------------------------------------ summary -- */
+  .tix-summary {
+    position: sticky;
+    top: calc(var(--header-h) + 1.25rem);
+    display: grid;
+    gap: 1rem;
+    padding: clamp(1.4rem, 2.4vw, 2rem);
+  }
+
+  .tix-sum-h {
+    font-family: var(--sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin: 0;
+  }
+
+  .tix-sum-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .tix-sum-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: 0;
+    font-size: 0.88rem;
+    color: var(--muted);
+  }
+
+  .tix-sum-list li.is-zero { display: none; }
+  .sum-q { color: var(--faint); }
+  .sum-amt { font-variant-numeric: tabular-nums; color: var(--paper); white-space: nowrap; }
+
+  .tix-empty { margin: 0; font-size: 0.86rem; color: var(--faint); }
+  .tix-empty[hidden] { display: none; }
+
+  .tix-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 1rem;
+    padding-top: 0.9rem;
+    border-top: 1px solid var(--line);
+    font-size: 0.75rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  .tix-total strong {
+    font-family: var(--display);
+    font-size: clamp(1.7rem, 2.4vw, 2.3rem);
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--paper);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .tix-checkout { width: 100%; }
+
+  .tix-result {
+    margin: 0;
+    padding: 0.85rem 1rem;
+    border-radius: var(--r);
+    border: 1px solid rgba(216, 20, 51, 0.4);
+    background: rgba(216, 20, 51, 0.12);
+    font-size: 0.85rem;
+  }
+
+  .tix-fine { margin: 0; font-size: 0.76rem; color: var(--faint); }
+
+  @media (max-width: 1000px) {
+    .tix { grid-template-columns: 1fr; }
+    .tix-summary { position: static; }
+  }
+
+  @media (max-width: 560px) {
+    .tix-row {
+      grid-template-columns: minmax(0, 1fr) auto;
+      row-gap: 0.9rem;
+    }
+    .qty { grid-column: 1 / -1; justify-self: start; }
+  }
+</style>
+
+<script>
+  const root = document.querySelector<HTMLElement>('[data-tickets]');
+  if (root) {
+    const money = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' });
+    const rows = Array.from(root.querySelectorAll<HTMLElement>('[data-ticket]'));
+    const totalEl = root.querySelector<HTMLElement>('[data-total]')!;
+    const emptyEl = root.querySelector<HTMLElement>('[data-empty]')!;
+    const resultEl = root.querySelector<HTMLElement>('[data-checkout-result]')!;
+
+    const render = () => {
+      let total = 0;
+      let count = 0;
+
+      for (const row of rows) {
+        const id = row.dataset.ticket!;
+        const price = Number(row.dataset.price);
+        const input = row.querySelector<HTMLInputElement>('[data-qty]')!;
+        const qty = Math.max(0, Math.min(50, Math.floor(Number(input.value) || 0)));
+        if (String(qty) !== input.value) input.value = String(qty);
+
+        const amount = qty * price;
+        total += amount;
+        count += qty;
+        row.classList.toggle('has-qty', qty > 0);
+
+        const sumRow = root.querySelector<HTMLElement>(`[data-sum-row="${id}"]`);
+        if (sumRow) {
+          sumRow.classList.toggle('is-zero', qty === 0);
+          sumRow.querySelector('[data-sum-qty]')!.textContent = qty > 0 ? ` × ${qty}` : '';
+          sumRow.querySelector('[data-sum-amt]')!.textContent = money.format(amount);
+        }
+      }
+
+      totalEl.textContent = money.format(total);
+      emptyEl.hidden = count > 0;
+    };
+
+    root.addEventListener('click', (e) => {
+      const btn = (e.target as HTMLElement).closest<HTMLElement>('[data-step]');
+      if (!btn) return;
+      const input = btn.parentElement!.querySelector<HTMLInputElement>('[data-qty]')!;
+      input.value = String(Math.max(0, Math.min(50, (Number(input.value) || 0) + Number(btn.dataset.step))));
+      render();
+    });
+
+    root.addEventListener('input', (e) => {
+      if ((e.target as HTMLElement).matches('[data-qty]')) render();
+    });
+
+    /*
+     * Placeholder checkout.
+     *
+     * To go live: build the line items from the quantities above and hand them
+     * to the Tweeble checkout session instead of showing this notice.
+     */
+    root.querySelector('[data-checkout]')!.addEventListener('click', () => {
+      const lines = rows
+        .map((r) => ({
+          name: r.querySelector('.tix-name')!.textContent!.trim(),
+          qty: Number(r.querySelector<HTMLInputElement>('[data-qty]')!.value) || 0,
+        }))
+        .filter((l) => l.qty > 0);
+
+      resultEl.hidden = false;
+      resultEl.textContent = lines.length
+        ? `Checkout is not connected yet. ${lines.map((l) => `${l.qty} × ${l.name}`).join(', ')} — total ${totalEl.textContent}. Payment will be powered by Tweeble.`
+        : 'Add at least one ticket to see the checkout preview.';
+    });
+
+    render();
+  }
+</script>

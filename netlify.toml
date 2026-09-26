@@ -1,0 +1,41 @@
+# Netlify (free plan) — static build, no functions, no image CDN needed.
+# Image derivatives are committed under public/media by scripts/optimize-media.mjs,
+# so the build here is pure Astro and stays well inside the build-minute budget.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  NPM_FLAGS = "--no-audit --no-fund"
+
+[[redirects]]
+  from = "/event"
+  to = "/events"
+  status = 301
+
+[[redirects]]
+  from = "/stained-red-carpet"
+  to = "/events/stained-red-carpet"
+  status = 301
+
+[[redirects]]
+  from = "/image-gallery"
+  to = "/gallery"
+  status = 301
+
+[[redirects]]
+  from = "/gallery/images"
+  to = "/event-gallery"
+  status = 301
+
+[[redirects]]
+  from = "/videos/*"
+  to = "/videos"
+  status = 301
+
+[[redirects]]
+  from = "/*"
+  to = "/404"
+  status = 404

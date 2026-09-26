@@ -1,0 +1,287 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Figure from '../components/Figure.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import PhotoRail from '../components/PhotoRail.astro';
+import EventCard from '../components/EventCard.astro';
+import { brooke, natasha, training } from '../data/content';
+import galleries from '../data/galleries.json';
+
+const headshots = galleries.items.portraits;
+const standup = galleries.items.comedy;
+const flyers = galleries.items.flyers;
+---
+
+<Base
+  title="Brooke Forbes"
+  description="Brooke Forbes — 6× award-winning actress, comedian, writer and producer. Creator of Forbes Productions and The Stained Red Carpet."
+  ogImage="/media/full/headshot-3-1.webp"
+>
+  <PageHero
+    eyebrow={brooke.role}
+    title="Creating Art"
+    titleAccent="with Heart"
+    lede={brooke.subhead}
+    media={brooke.portrait}
+    variant="full"
+  >
+    <div class="btn-row">
+      <a class="btn" href="/natasha">The film</a>
+      <a class="btn btn-ghost" href="#standup">Stand-up</a>
+      <a class="btn btn-ghost" href="/contact">Book Brooke</a>
+    </div>
+  </PageHero>
+
+  <!-- ─────────────────────────────────────────────── brand statement -->
+  <section class="section">
+    <div class="wrap two">
+      <div data-reveal>
+        <p class="eyebrow">Brand statement</p>
+        <h2>With love, laughter<br /><span class="em">and purpose — always.</span></h2>
+      </div>
+      <div class="prose" data-reveal style="--reveal-delay:110ms">
+        {brooke.brandStatement.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────────────── acting -->
+  <section class="section band">
+    <div class="wrap two">
+      <div data-reveal>
+        <p class="eyebrow">Featured work</p>
+        <h2>Acting</h2>
+        <blockquote class="pull">&ldquo;{brooke.quote}&rdquo;</blockquote>
+      </div>
+      <div class="prose" data-reveal style="--reveal-delay:110ms">
+        {brooke.acting.map((p) => <p>{p}</p>)}
+        <div class="btn-row">
+          <a class="btn btn-ghost" href={natasha.externalSite} target="_blank" rel="noopener noreferrer">
+            natashamailorderbride.com
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────────────────────────────────────── natasha -->
+  <section class="section film">
+    <div class="wrap film-grid">
+      <div class="film-poster" data-reveal>
+        <Figure media={natasha.poster} alt={`${natasha.title}: ${natasha.subtitle} poster`} fit="auto" large sizes="(max-width: 950px) 70vw, 30vw" />
+      </div>
+
+      <div data-reveal style="--reveal-delay:110ms">
+        <p class="eyebrow">{natasha.status}</p>
+        <h2 class="film-h">Natasha:<br /><span class="em">Escape to America</span></h2>
+        <p class="lede">A hilarious comedy about an immigrant&rsquo;s journey to find the American Dream.</p>
+
+        <dl class="facts">
+          {natasha.facts.map(([k, v]) => (
+            <div><dt>{k}</dt><dd>{v}</dd></div>
+          ))}
+        </dl>
+
+        <div class="btn-row">
+          <a class="btn" href="/natasha">Full film page</a>
+          <a class="btn btn-ghost" href={natasha.pitchDeck} target="_blank" rel="noopener noreferrer">Download pitch proposal</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────── headshots -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Portfolio</p>
+          <h2>Headshots</h2>
+        </div>
+        <p class="lede">Press-ready portraits and promotional photography. Tap to enlarge.</p>
+      </div>
+    </div>
+    <PhotoRail items={headshots} context="Brooke Forbes portrait" label="Brooke Forbes headshots" height="clamp(320px, 38vw, 540px)" />
+  </section>
+
+  <!-- ───────────────────────────────────────────────────────── stand-up -->
+  <section class="section band" id="standup">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Comedy</p>
+          <h2>Stand Up</h2>
+        </div>
+        <p class="lede">
+          Named &ldquo;Outstanding Female Stand-Up Comedian&rdquo; by the HAPA Festival in Los Angeles, and a regular on
+          the LA circuit alongside Bill Burr, Tom Arnold, Paul Rodriguez and SNL alumni.
+        </p>
+      </div>
+      <div data-reveal><PhotoGrid items={standup} context="Brooke Forbes stand-up" row={250} min={300} /></div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────── past flyers -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Live archive</p>
+        <h2>Past Show Flyers</h2>
+      </div>
+      <div data-reveal><PhotoGrid items={flyers} context="Show flyer" variant="masonry" min={260} /></div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────── yoga -->
+  <section class="section band">
+    <div class="wrap yoga">
+      <div data-reveal>
+        <Figure media={training.kundalini.media} alt="Kundalini yoga with Brooke Forbes" ratio="4 / 3" sizes="(max-width: 950px) 92vw, 44vw" class="yoga-fig" />
+      </div>
+      <div data-reveal style="--reveal-delay:110ms">
+        <p class="eyebrow">Wellness</p>
+        <h2>{training.kundalini.title}</h2>
+        <div class="prose">{training.kundalini.body.map((p) => <p>{p}</p>)}</div>
+        <p class="schedule">{training.kundalini.schedule}</p>
+        <div class="btn-row"><a class="btn" href="/training">Join my yoga classes</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────────── madonna -->
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="madonna card" data-reveal>
+        <p class="eyebrow eyebrow-plain">Live performance</p>
+        <h2>{brooke.madonna.title}</h2>
+        <p class="lede">{brooke.madonna.body}</p>
+        <div class="btn-row"><a class="btn btn-ghost" href="/contact">Enquire about booking</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────────────── event -->
+  <section class="section band">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Next on the carpet</p>
+        <h2>Upcoming Event</h2>
+      </div>
+      <div data-reveal><EventCard /></div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .em { font-style: italic; color: var(--gold-soft); }
+  .band { background: var(--ink-2); border-block: 1px solid var(--line); }
+
+  .section-head.split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem 3rem;
+  }
+  .section-head.split .lede { max-width: 48ch; }
+
+  .two {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .pull {
+    margin: 1.75rem 0 0;
+    padding-left: 1.4rem;
+    border-left: 2px solid var(--gold);
+    font-family: var(--display);
+    font-size: clamp(1.1rem, 1.6vw, 1.55rem);
+    font-style: italic;
+    color: var(--gold-soft);
+  }
+
+  .film {
+    background:
+      radial-gradient(70% 70% at 15% 20%, rgba(216, 20, 51, 0.15) 0%, transparent 62%),
+      var(--ink);
+  }
+
+  .film-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.7fr) minmax(0, 1.3fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .film-poster :global(.fig) {
+    border-radius: var(--r);
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    box-shadow: var(--shadow-lift);
+  }
+
+  .film-h { font-size: clamp(2rem, 1.2rem + 3vw, 4rem); }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1.1rem 2rem;
+    margin: 2rem 0;
+    padding-top: 1.75rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .facts div { display: grid; gap: 0.2rem; }
+
+  .facts dt {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .facts dd { margin: 0; font-size: 0.95rem; color: var(--muted); }
+
+  .yoga {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: center;
+  }
+
+  .yoga :global(.yoga-fig) { border-radius: var(--r-lg); overflow: hidden; }
+
+  .schedule {
+    margin: 1.5rem 0 0;
+    padding: 0.7rem 1.1rem;
+    border: 1px solid rgba(217, 178, 106, 0.35);
+    border-radius: 999px;
+    display: inline-block;
+    font-size: 0.82rem;
+    letter-spacing: 0.06em;
+    color: var(--gold-soft);
+  }
+
+  .yoga .btn-row { margin-top: 1.75rem; }
+
+  .madonna {
+    padding: clamp(2rem, 4vw, 3.5rem);
+    text-align: center;
+    background:
+      radial-gradient(70% 140% at 50% 0%, rgba(217, 178, 106, 0.12) 0%, transparent 60%),
+      linear-gradient(180deg, var(--surface) 0%, var(--ink-2) 100%);
+  }
+
+  .madonna .eyebrow { justify-content: center; }
+  .madonna .lede { margin: 0 auto 1.75rem; }
+  .madonna .btn-row { justify-content: center; }
+
+  @media (max-width: 950px) {
+    .two, .film-grid, .yoga { grid-template-columns: 1fr; }
+    .film-poster { max-width: 400px; }
+  }
+</style>

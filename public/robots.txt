@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+Disallow: /event-gallery
+
+Sitemap: https://forbesproductions.us/sitemap-index.xml

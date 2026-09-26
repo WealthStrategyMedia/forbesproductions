@@ -1,0 +1,303 @@
+---
+import Base from '../layouts/Base.astro';
+import Figure from '../components/Figure.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import SponsorTiers from '../components/SponsorTiers.astro';
+import { natasha } from '../data/content';
+import { asset } from '../lib/media';
+import galleries from '../data/galleries.json';
+
+const bg = asset('natasha-da7bb234');
+const stills = galleries.items.natasha;
+
+const filmSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Movie',
+  name: `${natasha.title}: ${natasha.subtitle}`,
+  description: natasha.synopsis,
+  genre: ['Comedy'],
+  inLanguage: 'en',
+  duration: 'PT78M',
+  productionCompany: { '@type': 'Organization', name: 'Forbes Productions US' },
+  author: [
+    { '@type': 'Person', name: 'Brooke Forbes' },
+    { '@type': 'Person', name: 'Bob Colleary' },
+  ],
+  award: natasha.awards.map(([fest, prize]) => `${prize} — ${fest}`),
+};
+---
+
+<Base
+  title="Natasha: Escape to America"
+  description="Natasha Mail Order Bride: Escape to America — an award-winning feature comedy from Forbes Productions. Coming 2026."
+  ogImage="/media/full/poster-natasha-1.webp"
+>
+  <script slot="head" type="application/ld+json" set:html={JSON.stringify(filmSchema)} />
+
+  <!-- ─────────────────────────────────────────────────────────── hero -->
+  <section class="fhero grain">
+    <div class="fhero-bg" aria-hidden="true">
+      <img src={bg.full} width={bg.width} height={bg.height} alt="" fetchpriority="high" decoding="async" />
+    </div>
+
+    <div class="wrap fhero-inner">
+      <div>
+        <p class="eyebrow">{natasha.status} · Forbes Productions US</p>
+        <h1>Natasha<br /><span class="em">Escape to America</span></h1>
+        <p class="lede">{natasha.logline}</p>
+        <div class="btn-row">
+          <a class="btn btn-lg" href="#reel">Watch the reel</a>
+          <a class="btn btn-lg btn-ghost" href={natasha.pitchDeck} target="_blank" rel="noopener noreferrer">Download pitch proposal</a>
+          <a class="btn btn-lg btn-ghost" href={natasha.externalSite} target="_blank" rel="noopener noreferrer">Official site</a>
+        </div>
+      </div>
+
+      <div class="fhero-poster" data-reveal>
+        <Figure media={natasha.poster} alt="Natasha: Escape to America poster" fit="auto" large loading="eager" sizes="(max-width: 1050px) 62vw, 28vw" class="poster" />
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────── laurels -->
+  <section class="section-tight laurels">
+    <div class="wrap">
+      <ul class="laurel-list">
+        {natasha.awards.map(([fest, prize], i) => (
+          <li data-reveal style={`--reveal-delay:${i * 80}ms`}>
+            <strong>{prize}</strong>
+            <span>{fest}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────── synopsis -->
+  <section class="section">
+    <div class="wrap two">
+      <div data-reveal>
+        <p class="eyebrow">The story</p>
+        <h2>Synopsis</h2>
+        <dl class="facts">
+          {natasha.facts.map(([k, v]) => <div><dt>{k}</dt><dd>{v}</dd></div>)}
+        </dl>
+      </div>
+      <div class="prose" data-reveal style="--reveal-delay:110ms">
+        <p class="lede">{natasha.synopsis}</p>
+        {natasha.pitch.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────── reel -->
+  <section class="section band" id="reel">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Screening room</p>
+        <h2>Watch the Reel</h2>
+      </div>
+      <div class="reel" data-reveal>
+        <VideoEmbed provider="vimeo" id={natasha.vimeoId} title="Natasha: Escape to America — reel" poster={natasha.still} />
+      </div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────── crapistan -->
+  <section class="section lore">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">World building</p>
+        <h2>The Land of Crapistan</h2>
+      </div>
+      <div class="lore-grid">
+        {natasha.lore.map((p, i) => (
+          <p class="lore-p" data-reveal style={`--reveal-delay:${i * 100}ms`}>{p}</p>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────────────────────────────────────── stills -->
+  <section class="section band">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Gallery</p>
+          <h2>Stills, Cast &amp; Behind the Scenes</h2>
+        </div>
+        <p class="lede">{stills.length} frames from the shoot, the wrap party and the festival run.</p>
+      </div>
+      <div data-reveal><PhotoGrid items={stills} context="Natasha: Escape to America" row={240} min={300} eager={6} /></div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────── film sponsors -->
+  <section class="section" id="sponsor">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Brand partnerships</p>
+          <h2>Film Sponsorship</h2>
+        </div>
+        <p class="lede">
+          From vendor tables to a scene written around your brand — align with a festival-winning comedy
+          heading to release in 2026.
+        </p>
+      </div>
+      <div data-reveal><SponsorTiers group="film" /></div>
+    </div>
+  </section>
+
+  <section class="section cta">
+    <div class="wrap cta-inner" data-reveal>
+      <h2>Want the full pitch?</h2>
+      <p class="lede">Download the proposal, or talk to us about production, distribution and brand integration.</p>
+      <div class="btn-row">
+        <a class="btn btn-lg" href={natasha.pitchDeck} target="_blank" rel="noopener noreferrer">Download pitch proposal (PDF)</a>
+        <a class="btn btn-lg btn-ghost" href="/contact">Contact the team</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .em { font-style: italic; color: var(--gold-soft); }
+  .band { background: var(--ink-2); border-block: 1px solid var(--line); }
+
+  .fhero {
+    position: relative;
+    padding-block: clamp(3.5rem, 9vw, 8rem);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .fhero-bg { position: absolute; inset: 0; z-index: -2; }
+
+  .fhero-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.7) brightness(0.45) blur(2px);
+    transform: scale(1.08);
+  }
+
+  .fhero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(65% 70% at 15% 35%, rgba(216, 20, 51, 0.3) 0%, transparent 60%),
+      linear-gradient(100deg, rgba(8, 7, 11, 0.94) 0%, rgba(8, 7, 11, 0.8) 48%, rgba(8, 7, 11, 0.5) 100%),
+      linear-gradient(180deg, transparent 60%, var(--ink) 100%);
+  }
+
+  .fhero-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: center;
+  }
+
+  .fhero h1 { font-size: clamp(2.6rem, 1.2rem + 5.4vw, 6.2rem); }
+  .fhero .lede { margin: 1.5rem 0 2.25rem; }
+
+  .fhero-poster :global(.poster) {
+    border-radius: var(--r);
+    overflow: hidden;
+    border: 1px solid var(--line-strong);
+    box-shadow: 0 40px 90px -30px rgba(0, 0, 0, 0.95);
+  }
+
+  .laurels { border-bottom: 1px solid var(--line); }
+
+  .laurel-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    gap: clamp(1rem, 2vw, 2rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .laurel-list li {
+    display: grid;
+    gap: 0.25rem;
+    margin: 0;
+    padding-left: 1.1rem;
+    border-left: 2px solid var(--gold);
+  }
+
+  .laurel-list strong { font-size: 0.98rem; }
+  .laurel-list span { font-size: 0.8rem; color: var(--faint); }
+
+  .two {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .facts {
+    display: grid;
+    gap: 0.9rem;
+    margin: 2rem 0 0;
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .facts div { display: grid; grid-template-columns: 9rem minmax(0, 1fr); gap: 1rem; }
+
+  .facts dt {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding-top: 0.25em;
+  }
+
+  .facts dd { margin: 0; font-size: 0.95rem; color: var(--muted); }
+
+  .reel { max-width: 1200px; margin-inline: auto; }
+
+  .lore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: clamp(1.5rem, 3vw, 3rem);
+  }
+
+  .lore-p {
+    margin: 0;
+    padding-top: 1.4rem;
+    border-top: 2px solid var(--red);
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+
+  .section-head.split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem 3rem;
+  }
+  .section-head.split .lede { max-width: 44ch; }
+
+  .cta {
+    text-align: center;
+    background: radial-gradient(60% 100% at 50% 100%, rgba(216, 20, 51, 0.2) 0%, transparent 62%), var(--ink-2);
+    border-top: 1px solid var(--line);
+  }
+
+  .cta-inner .lede { margin: 1.2rem auto 2rem; }
+  .cta-inner .btn-row { justify-content: center; }
+
+  @media (max-width: 1050px) {
+    .fhero-inner, .two { grid-template-columns: 1fr; }
+    .fhero-poster { max-width: 340px; }
+    .facts div { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
+</style>

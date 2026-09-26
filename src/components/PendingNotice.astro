@@ -1,0 +1,51 @@
+---
+/**
+ * Marks a flow that is intentionally inert until the Tweeble integration lands.
+ * Rendered next to every checkout and every form so nobody mistakes the stub
+ * for a working submission. See PAYMENTS.md.
+ */
+interface Props {
+  kind?: 'payment' | 'form';
+  compact?: boolean;
+}
+const { kind = 'form', compact = false } = Astro.props;
+
+const copy =
+  kind === 'payment'
+    ? 'Checkout is not live yet. Secure payment will be powered by Tweeble — this button is a placeholder so the flow can be reviewed.'
+    : 'This form is not connected yet. Submissions will be handled by Tweeble — nothing you enter here is sent or stored.';
+---
+
+<p class:list={['pending', compact && 'compact']} role="note">
+  <span class="pending-dot" aria-hidden="true"></span>
+  <span><strong>Preview only.</strong> {copy}</span>
+</p>
+
+<style>
+  .pending {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    margin: 0;
+    padding: 0.85rem 1.1rem;
+    border: 1px dashed rgba(217, 178, 106, 0.45);
+    border-radius: var(--r);
+    background: rgba(217, 178, 106, 0.06);
+    font-size: 0.82rem;
+    line-height: 1.55;
+    color: var(--muted);
+  }
+
+  .pending strong { color: var(--gold-soft); font-weight: 600; }
+  .compact { padding: 0.6rem 0.85rem; font-size: 0.78rem; }
+
+  .pending-dot {
+    flex: none;
+    width: 8px;
+    height: 8px;
+    margin-top: 0.45em;
+    border-radius: 999px;
+    background: var(--gold);
+    box-shadow: 0 0 0 4px rgba(217, 178, 106, 0.14);
+  }
+</style>

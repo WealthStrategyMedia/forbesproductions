@@ -1,0 +1,165 @@
+---
+/**
+ * A single mirrored image. Clicking opens the global lightbox (Lightbox.astro
+ * listens for [data-zoom] anywhere in the document).
+ */
+import { asset, describe } from '../lib/media';
+
+interface Props {
+  media: string;
+  alt?: string;
+  caption?: string;
+  /** Context prefix used when no explicit alt is given. */
+  context?: string;
+  /** 'cover' crops to the given ratio; 'auto' keeps the image's own ratio. */
+  fit?: 'cover' | 'auto';
+  ratio?: string;
+  sizes?: string;
+  loading?: 'lazy' | 'eager';
+  fetchpriority?: 'high' | 'auto' | 'low';
+  zoom?: boolean;
+  class?: string;
+  /** Use the large derivative inline (heroes and posters). */
+  large?: boolean;
+}
+
+const {
+  media,
+  alt,
+  caption,
+  context,
+  fit = 'cover',
+  ratio = '3 / 2',
+  sizes = '(max-width: 780px) 92vw, 34vw',
+  loading = 'lazy',
+  fetchpriority = 'auto',
+  zoom = true,
+  large = false,
+  class: className = '',
+} = Astro.props;
+
+const a = asset(media);
+const altText = alt ?? describe(media, context);
+const src = large ? a.full : a.thumb;
+const srcset = `${a.thumb} 820w, ${a.full} ${Math.max(a.width, 821)}w`;
+---
+
+<figure class:list={['fig', `fit-${fit}`, className]} style={`--ratio:${ratio}; --nat:${a.aspect}`}>
+  {zoom ? (
+    <button
+      type="button"
+      class="fig-btn"
+      data-zoom={a.full}
+      data-zoom-w={a.width}
+      data-zoom-h={a.height}
+      data-zoom-alt={altText}
+      data-zoom-caption={caption ?? ''}
+      aria-label={`Enlarge image: ${altText}`}
+    >
+      <img
+        src={src}
+        srcset={srcset}
+        sizes={sizes}
+        width={a.width}
+        height={a.height}
+        alt={altText}
+        loading={loading}
+        decoding="async"
+        fetchpriority={fetchpriority}
+      />
+      <span class="fig-zoom" aria-hidden="true">
+        <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <circle cx="11" cy="11" r="7" /><path d="M20 20l-3.6-3.6M11 8.4v5.2M8.4 11h5.2" />
+        </svg>
+      </span>
+    </button>
+  ) : (
+    <img
+      src={src}
+      srcset={srcset}
+      sizes={sizes}
+      width={a.width}
+      height={a.height}
+      alt={altText}
+      loading={loading}
+      decoding="async"
+      fetchpriority={fetchpriority}
+    />
+  )}
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<style>
+  .fig {
+    margin: 0;
+    position: relative;
+  }
+
+  .fig-btn {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: var(--surface);
+    cursor: zoom-in;
+    position: relative;
+    overflow: hidden;
+    border-radius: inherit;
+    color: var(--paper);
+  }
+
+  .fig img {
+    width: 100%;
+    border-radius: inherit;
+    background: var(--surface);
+    transition: transform 0.7s var(--ease), filter 0.5s var(--ease);
+  }
+
+  .fit-cover img {
+    aspect-ratio: var(--ratio);
+    object-fit: cover;
+  }
+
+  .fit-auto img {
+    aspect-ratio: var(--nat);
+    height: auto;
+  }
+
+  .fig-btn:hover img {
+    transform: scale(1.045);
+  }
+
+  .fig-zoom {
+    position: absolute;
+    right: 0.7rem;
+    bottom: 0.7rem;
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border-radius: 999px;
+    background: rgba(8, 7, 11, 0.72);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--line-strong);
+    opacity: 0;
+    transform: translateY(6px);
+    transition: opacity 0.3s var(--ease), transform 0.3s var(--ease);
+  }
+
+  .fig-btn:hover .fig-zoom,
+  .fig-btn:focus-visible .fig-zoom {
+    opacity: 1;
+    transform: none;
+  }
+
+  figcaption {
+    margin-top: 0.7rem;
+    font-size: 0.82rem;
+    color: var(--faint);
+    line-height: 1.5;
+  }
+
+  @media (hover: none) {
+    .fig-zoom { opacity: 1; transform: none; }
+  }
+</style>

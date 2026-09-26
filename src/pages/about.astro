@@ -1,0 +1,342 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Figure from '../components/Figure.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import PartnerStrip from '../components/PartnerStrip.astro';
+import PressCard from '../components/PressCard.astro';
+import { about, capabilities, values, reliefPillars, brooke, press } from '../data/content';
+import galleries from '../data/galleries.json';
+
+const flyerWall = galleries.items.flyers.slice(0, 12);
+const eventWall = galleries.items.redcarpet.slice(0, 9);
+---
+
+<Base
+  title="About"
+  description="Forbes Productions — where entertainment meets purpose. A Hollywood production house blending artistry, compassion and creativity."
+>
+  <PageHero
+    eyebrow={about.tagline}
+    title="Forbes"
+    titleAccent="Productions"
+    lede={about.intro}
+    media="audience-great-shot"
+    variant="full"
+  >
+    <div class="btn-row">
+      <a class="btn" href="/contact">Work with us</a>
+      <a class="btn btn-ghost" href="/brooke-forbes">Meet Brooke</a>
+    </div>
+  </PageHero>
+
+  <!-- ───────────────────────────────────────────────────────── mission -->
+  <section class="section">
+    <div class="wrap mission">
+      <div data-reveal>
+        <p class="eyebrow">{about.mission.eyebrow}</p>
+        <h2>{about.mission.title}</h2>
+      </div>
+      <div class="prose" data-reveal style="--reveal-delay:110ms">
+        <p class="lede">{about.mission.lede}</p>
+        <p>{about.mission.body}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────────────────────────────────── flyer wall -->
+  <section class="section-tight">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">A decade of shows</p>
+          <h2>The Poster Wall</h2>
+        </div>
+        <p class="lede">Every headline night, every room we have filled. Tap any poster to open it full size.</p>
+      </div>
+      <div data-reveal><PhotoGrid items={flyerWall} context="Forbes Productions show flyer" variant="masonry" min={260} /></div>
+    </div>
+  </section>
+
+  <!-- ──────────────────────────────────────────────────── capabilities -->
+  <section class="section band">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">What we offer</p>
+        <h2>Our Capabilities</h2>
+      </div>
+
+      <div class="cap-grid">
+        {capabilities.map((c, i) => (
+          <article class="cap card" data-reveal style={`--reveal-delay:${i * 110}ms`}>
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ───────────────────────────────────────────────────────── founder -->
+  <section class="section">
+    <div class="wrap founder">
+      <div class="founder-portrait" data-reveal>
+        <Figure media={brooke.headshot} alt="Brooke Forbes" fit="auto" large sizes="(max-width: 950px) 88vw, 34vw" />
+      </div>
+      <div class="founder-copy" data-reveal style="--reveal-delay:110ms">
+        <p class="eyebrow">{brooke.role}</p>
+        <h2>Brooke <span class="em">Forbes</span></h2>
+        <div class="prose">
+          {brooke.bio.map((p) => <p>{p}</p>)}
+        </div>
+        <div class="btn-row"><a class="btn btn-ghost" href="/brooke-forbes">Full biography</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────────────── values -->
+  <section class="section band">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Our values</p>
+        <h2>What Drives Us</h2>
+      </div>
+
+      <div class="val-grid">
+        {values.map((v, i) => (
+          <article class="val" data-reveal style={`--reveal-delay:${i * 110}ms`}>
+            <p class="val-n">{v.n}</p>
+            <h3>{v.title}</h3>
+            <p class="val-b">{v.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────────────── relief -->
+  <section class="section relief">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Forbes Productions × Relief Alliance</p>
+        <h2>{about.relief.title}</h2>
+      </div>
+
+      <div class="relief-intro prose" data-reveal>
+        {about.relief.body.map((p) => <p>{p}</p>)}
+      </div>
+
+      <div class="teenx card" data-reveal>
+        <h3>✨ {about.relief.teenX.title}</h3>
+        <p>{about.relief.teenX.body}</p>
+      </div>
+
+      <div class="pillars">
+        {reliefPillars.map((p, i) => (
+          <article class="pillar card" data-reveal style={`--reveal-delay:${i * 90}ms`}>
+            <span class="pillar-emoji" aria-hidden="true">{p.emoji}</span>
+            <h3>{p.title}</h3>
+            <p>{p.body}</p>
+          </article>
+        ))}
+      </div>
+
+      <p class="proceeds" data-reveal>{about.relief.proceeds}</p>
+
+      <div class="relief-close" data-reveal>
+        <h3>{about.relief.closing.title}</h3>
+        <p class="prose">{about.relief.closing.body}</p>
+        <div class="btn-row">
+          <a class="btn" href={about.relief.href} target="_blank" rel="noopener noreferrer">Visit Relief Alliance</a>
+          <a class="btn btn-ghost" href="/events/stained-red-carpet#sponsor">Sponsor an event</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────────── story -->
+  <section class="section band">
+    <div class="wrap story">
+      <div data-reveal>
+        <p class="eyebrow">My story</p>
+        <h2>The Heart Behind<br /><span class="em">Forbes Productions</span></h2>
+        <blockquote class="story-quote">&ldquo;Where Entertainment Meets Purpose.&rdquo;</blockquote>
+      </div>
+      <div class="prose" data-reveal style="--reveal-delay:110ms">
+        {brooke.story.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <!-- ────────────────────────────────────────────────── event pictures -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">On the night</p>
+          <h2>Ready to Create Something Amazing?</h2>
+        </div>
+        <a class="link-arrow" href="/gallery">
+          Full gallery
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+      <div data-reveal><PhotoGrid items={eventWall} context="Forbes Productions event" row={250} min={300} /></div>
+    </div>
+  </section>
+
+  <!-- ─────────────────────────────────────────────────────── articles -->
+  <section class="section band">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Blog</p>
+          <h2>Latest Articles</h2>
+        </div>
+        <a class="link-arrow" href="/news">
+          All news
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h13M13 6l6 6-6 6" /></svg>
+        </a>
+      </div>
+      <div class="press-grid">
+        {press.slice(0, 3).map((p, i) => (
+          <div data-reveal style={`--reveal-delay:${i * 100}ms`}><PressCard {...p} /></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <PartnerStrip />
+</Base>
+
+<style>
+  .em { font-style: italic; color: var(--gold-soft); }
+  .band { background: var(--ink-2); border-block: 1px solid var(--line); }
+
+  .section-head.split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem 3rem;
+  }
+
+  .section-head.split .lede { max-width: 44ch; }
+
+  .mission {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .cap-grid, .press-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+    gap: clamp(1rem, 1.8vw, 1.75rem);
+  }
+
+  .cap { padding: clamp(1.6rem, 2.6vw, 2.5rem); }
+  .cap h3 { margin-bottom: 0.6rem; }
+  .cap p { margin: 0; color: var(--muted); }
+
+  .founder {
+    display: grid;
+    grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .founder-portrait :global(.fig) {
+    position: sticky;
+    top: calc(var(--header-h) + 1.5rem);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    border: 1px solid var(--line);
+  }
+
+  .val-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: clamp(1.25rem, 2.4vw, 2.5rem);
+  }
+
+  .val { border-top: 2px solid var(--red); padding-top: 1.5rem; }
+
+  .val-n {
+    margin: 0 0 0.6rem;
+    font-family: var(--display);
+    font-size: 2.6rem;
+    line-height: 1;
+    color: rgba(245, 242, 235, 0.16);
+  }
+
+  .val h3 { margin-bottom: 0.35rem; }
+  .val-b { margin: 0; color: var(--muted); }
+
+  .relief {
+    background:
+      radial-gradient(70% 60% at 85% 12%, rgba(216, 20, 51, 0.13) 0%, transparent 60%),
+      var(--ink);
+  }
+
+  .relief-intro { max-width: 78ch; font-size: 1.05rem; }
+
+  .teenx {
+    margin: clamp(2rem, 3.5vw, 3rem) 0;
+    padding: clamp(1.5rem, 2.6vw, 2.4rem);
+    border-color: rgba(217, 178, 106, 0.35);
+    background: rgba(217, 178, 106, 0.05);
+  }
+
+  .teenx h3 { margin-bottom: 0.7rem; }
+  .teenx p { margin: 0; color: var(--muted); max-width: 84ch; }
+
+  .pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+    gap: clamp(1rem, 1.6vw, 1.5rem);
+  }
+
+  .pillar { padding: clamp(1.4rem, 2.2vw, 2rem); }
+  .pillar-emoji { font-size: 1.6rem; display: block; margin-bottom: 0.7rem; }
+  .pillar h3 { font-size: 1.2rem; margin-bottom: 0.45rem; }
+  .pillar p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+
+  .proceeds {
+    margin: clamp(2rem, 3.5vw, 3rem) 0;
+    padding-left: 1.5rem;
+    border-left: 2px solid var(--gold);
+    font-family: var(--display);
+    font-size: clamp(1.15rem, 1.8vw, 1.7rem);
+    font-style: italic;
+    color: var(--gold-soft);
+    max-width: 62ch;
+  }
+
+  .relief-close { max-width: 80ch; }
+  .relief-close .btn-row { margin-top: 1.75rem; }
+
+  .story {
+    display: grid;
+    grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+    gap: clamp(2rem, 5vw, 5rem);
+    align-items: start;
+  }
+
+  .story-quote {
+    margin: 2rem 0 0;
+    padding-left: 1.4rem;
+    border-left: 2px solid var(--red);
+    font-family: var(--display);
+    font-size: clamp(1.3rem, 2vw, 1.9rem);
+    font-style: italic;
+    color: var(--gold-soft);
+  }
+
+  @media (max-width: 950px) {
+    .mission, .founder, .story { grid-template-columns: 1fr; }
+    .founder-portrait { max-width: 460px; }
+    .founder-portrait :global(.fig) { position: static; }
+  }
+</style>

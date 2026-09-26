@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import LegalPage from '../components/LegalPage.astro';
+import { terms } from '../data/legal';
+---
+
+<Base
+  title="Terms and Conditions"
+  description="Terms and Conditions governing tickets, sponsorships and participation in Forbes Productions events."
+>
+  <LegalPage title="Terms and Conditions" sections={terms} />
+</Base>

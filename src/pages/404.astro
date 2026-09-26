@@ -1,0 +1,63 @@
+---
+import Base from '../layouts/Base.astro';
+import { asset } from '../lib/media';
+
+const bg = asset('red-carpet-bike');
+---
+
+<Base title="Page not found" description="That page has left the carpet." noindex>
+  <section class="nf grain">
+    <div class="nf-bg" aria-hidden="true">
+      <img src={bg.full} width={bg.width} height={bg.height} alt="" decoding="async" />
+    </div>
+
+    <div class="wrap nf-inner">
+      <p class="eyebrow eyebrow-plain">Error 404</p>
+      <h1>This page has<br /><span class="em">left the carpet</span></h1>
+      <p class="lede">The link may be old, or the page has moved. Try one of these instead.</p>
+      <div class="btn-row">
+        <a class="btn btn-lg" href="/">Back to home</a>
+        <a class="btn btn-lg btn-ghost" href="/gallery">Gallery</a>
+        <a class="btn btn-lg btn-ghost" href="/events">Events</a>
+        <a class="btn btn-lg btn-ghost" href="/contact">Contact</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .em { font-style: italic; color: var(--gold-soft); }
+
+  .nf {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 74svh;
+    padding-block: clamp(4rem, 10vw, 8rem);
+    text-align: center;
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .nf-bg { position: absolute; inset: 0; z-index: -2; }
+
+  .nf-bg img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: saturate(0.5) brightness(0.35) blur(3px);
+    transform: scale(1.08);
+  }
+
+  .nf::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: radial-gradient(60% 70% at 50% 45%, rgba(216, 20, 51, 0.24) 0%, transparent 62%), rgba(8, 7, 11, 0.86);
+  }
+
+  .nf-inner .eyebrow { justify-content: center; }
+  .nf-inner .lede { margin: 1.2rem auto 2.25rem; }
+  .nf-inner .btn-row { justify-content: center; }
+</style>

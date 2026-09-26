@@ -1,0 +1,142 @@
+---
+import { asset } from '../lib/media';
+import { event } from '../data/event';
+
+interface Props {
+  /** 'full' is the events-page listing card; 'compact' is the homepage teaser. */
+  variant?: 'full' | 'compact';
+}
+const { variant = 'full' } = Astro.props;
+const a = asset(event.hero);
+---
+
+<article class:list={['ev', 'card', `ev-${variant}`]}>
+  <a class="ev-media" href={`/events/${event.slug}`} tabindex="-1" aria-hidden="true">
+    <img src={a.full} width={a.width} height={a.height} alt="" loading="lazy" decoding="async" sizes="(max-width: 900px) 92vw, 46vw" />
+    <span class="ev-badge">Upcoming</span>
+  </a>
+
+  <div class="ev-body">
+    <p class="eyebrow eyebrow-plain">Presented by Forbes Productions &amp; Relief Alliance</p>
+    <h3 class="ev-title"><a href={`/events/${event.slug}`}>{event.title}</a></h3>
+    <p class="ev-sub">{event.subtitle}</p>
+
+    <dl class="ev-meta">
+      <div>
+        <dt>Date</dt>
+        <dd>{event.dateLabel}</dd>
+      </div>
+      <div>
+        <dt>Venue</dt>
+        <dd>{event.venue}</dd>
+      </div>
+      <div>
+        <dt>Address</dt>
+        <dd>{event.address}</dd>
+      </div>
+    </dl>
+
+    <div class="btn-row ev-actions">
+      <a class="btn" href={`/events/${event.slug}#tickets`}>Purchase Tickets</a>
+      <a class="btn btn-ghost" href={`/events/${event.slug}#sponsor`}>Sponsor Event</a>
+      <a class="btn btn-ghost" href={`/events/${event.slug}`}>View Event</a>
+    </div>
+  </div>
+</article>
+
+<style>
+  .ev {
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    align-items: stretch;
+    overflow: hidden;
+  }
+
+  .ev:hover { box-shadow: var(--shadow-lift); }
+
+  .ev-media {
+    position: relative;
+    display: block;
+    min-height: 320px;
+    overflow: hidden;
+  }
+
+  .ev-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.9s var(--ease);
+  }
+
+  .ev:hover .ev-media img { transform: scale(1.05); }
+
+  .ev-badge {
+    position: absolute;
+    top: 1.1rem;
+    left: 1.1rem;
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    background: var(--red);
+    color: #fff;
+    font-size: 0.64rem;
+    font-weight: 700;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  .ev-body {
+    display: grid;
+    align-content: center;
+    gap: 0.6rem;
+    padding: clamp(1.6rem, 3vw, 3rem);
+  }
+
+  .ev-title {
+    margin: 0;
+    font-size: clamp(2rem, 3vw, 3.1rem);
+  }
+
+  .ev-title a { text-decoration: none; }
+  .ev-title a:hover { color: var(--gold-soft); }
+
+  .ev-sub {
+    margin: 0;
+    font-family: var(--display);
+    font-style: italic;
+    font-size: clamp(1.05rem, 1.4vw, 1.3rem);
+    color: var(--gold-soft);
+  }
+
+  .ev-meta {
+    display: grid;
+    gap: 0.75rem;
+    margin: 1.4rem 0 0.5rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--line);
+  }
+
+  .ev-meta div { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); gap: 1rem; }
+
+  .ev-meta dt {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    padding-top: 0.22em;
+  }
+
+  .ev-meta dd { margin: 0; font-size: 0.93rem; color: var(--muted); }
+
+  .ev-actions { margin-top: 1rem; }
+
+  .ev-compact .ev-actions .btn:nth-child(3) { display: none; }
+
+  @media (max-width: 900px) {
+    .ev { grid-template-columns: 1fr; }
+    /* min-height must be cleared: with aspect-ratio it would drive the width
+       (240px × 16/10 = 384px) and crop the photo inside the card. */
+    .ev-media { min-height: 0; aspect-ratio: 16 / 10; }
+    .ev-meta div { grid-template-columns: 1fr; gap: 0.15rem; }
+  }
+</style>

@@ -1,0 +1,270 @@
+---
+import { nav, navCta, site } from '../data/site';
+import { asset } from '../lib/media';
+
+const logo = asset('forbes-blk-transparent-copy-1');
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+const isActive = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
+---
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="hdr" id="site-header" data-header>
+  <div class="hdr-inner wrap">
+    <a class="brand" href="/" aria-label={`${site.name} — home`}>
+      <img src={logo.full} width={logo.width} height={logo.height} alt={site.name} fetchpriority="high" decoding="async" />
+    </a>
+
+    <nav class="nav" aria-label="Main">
+      <ul>
+        {nav.map((item) => (
+          <li>
+            <a href={item.href} class:list={['nav-link', isActive(item.href) && 'is-active']} aria-current={isActive(item.href) ? 'page' : undefined}>
+              {item.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="hdr-actions">
+      <a class="btn btn-sm hdr-cta" href="/events/stained-red-carpet#tickets">Tickets</a>
+      <a class="nav-link hdr-contact" href={navCta.href}>{navCta.label}</a>
+      <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu" data-burger>
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mnav" id="mobile-nav" hidden data-mobile-nav>
+  <nav class="mnav-inner" aria-label="Mobile">
+    <ul>
+      <li><a href="/" class:list={[isActive('/') && 'is-active']}>Home</a></li>
+      {nav.map((item) => (
+        <li><a href={item.href} class:list={[isActive(item.href) && 'is-active']}>{item.label}</a></li>
+      ))}
+      <li><a href="/contact" class:list={[isActive('/contact') && 'is-active']}>Contact</a></li>
+    </ul>
+    <a class="btn btn-lg mnav-cta" href="/events/stained-red-carpet#tickets">Purchase Tickets</a>
+  </nav>
+</div>
+
+<style>
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    background: rgba(8, 7, 11, 0.55);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid transparent;
+    transition: background 0.35s var(--ease), border-color 0.35s var(--ease);
+  }
+
+  .hdr[data-scrolled] {
+    background: rgba(8, 7, 11, 0.9);
+    border-bottom-color: var(--line);
+  }
+
+  .hdr-inner {
+    display: flex;
+    align-items: center;
+    gap: clamp(1rem, 3vw, 2.75rem);
+    width: 100%;
+  }
+
+  .brand {
+    flex: none;
+    display: block;
+    line-height: 0;
+  }
+
+  .brand img {
+    width: auto;
+    height: clamp(30px, 2.6vw, 40px);
+    /* Artwork is already white-on-transparent despite the "Blk" filename. */
+  }
+
+  .nav {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .nav ul {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.5rem, 1.5vw, 1.6rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .nav li { margin: 0; }
+
+  .nav-link {
+    position: relative;
+    display: inline-block;
+    padding: 0.4rem 0.1rem;
+    font-size: 0.735rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: color 0.25s var(--ease);
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 1px;
+    background: var(--red-bright);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease);
+  }
+
+  .nav-link:hover { color: var(--paper); }
+  .nav-link:hover::after,
+  .nav-link.is-active::after { transform: scaleX(1); }
+  .nav-link.is-active { color: var(--paper); }
+
+  .hdr-actions {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+  }
+
+  .hdr-contact { display: none; }
+
+  .burger {
+    display: none;
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    background: transparent;
+    cursor: pointer;
+    /* Column flex (not grid) so the bars sit exactly 6.5px apart and the
+       close-state translate collapses them into a clean X. */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+
+  .burger span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--paper);
+    transition: transform 0.3s var(--ease), opacity 0.2s var(--ease);
+  }
+
+  .burger[aria-expanded='true'] span:nth-child(1) { transform: translateY(6.5px) rotate(45deg); }
+  .burger[aria-expanded='true'] span:nth-child(2) { opacity: 0; }
+  .burger[aria-expanded='true'] span:nth-child(3) { transform: translateY(-6.5px) rotate(-45deg); }
+
+  /* ------------------------------------------------------------- mobile -- */
+  @media (max-width: 1180px) {
+    .nav { display: none; }
+    .hdr-inner { justify-content: space-between; }
+    .burger { display: flex; }
+    .hdr-cta { display: none; }
+  }
+
+  @media (min-width: 1181px) {
+    .hdr-contact { display: inline-block; }
+  }
+
+  .mnav {
+    position: fixed;
+    inset: var(--header-h) 0 0;
+    z-index: 99;
+    background: rgba(8, 7, 11, 0.98);
+    backdrop-filter: blur(20px);
+    overflow-y: auto;
+    animation: mnav-in 0.3s var(--ease);
+  }
+
+  @keyframes mnav-in {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: none; }
+  }
+
+  .mnav-inner {
+    display: grid;
+    gap: 1.75rem;
+    padding: clamp(1.5rem, 5vw, 3rem) var(--gutter) 4rem;
+  }
+
+  .mnav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+  }
+
+  .mnav li {
+    margin: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .mnav a {
+    display: block;
+    padding: 1rem 0;
+    font-family: var(--display);
+    font-size: clamp(1.6rem, 6vw, 2.2rem);
+    color: var(--paper);
+    text-decoration: none;
+  }
+
+  .mnav a.is-active { color: var(--gold); }
+
+  .mnav-cta { justify-self: start; }
+</style>
+
+<script>
+  const header = document.querySelector('[data-header]');
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]');
+  const panel = document.querySelector<HTMLElement>('[data-mobile-nav]');
+
+  const onScroll = () => {
+    if (!header) return;
+    header.toggleAttribute('data-scrolled', window.scrollY > 8);
+  };
+  onScroll();
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  if (burger && panel) {
+    const setOpen = (open: boolean) => {
+      burger.setAttribute('aria-expanded', String(open));
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      panel.hidden = !open;
+      document.body.classList.toggle('is-locked', open);
+    };
+
+    burger.addEventListener('click', () => setOpen(panel.hidden));
+    panel.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && !panel.hidden) setOpen(false);
+    });
+    // A resize past the breakpoint should not leave the page scroll-locked.
+    matchMedia('(min-width: 1181px)').addEventListener('change', (e) => {
+      if (e.matches) setOpen(false);
+    });
+  }
+</script>

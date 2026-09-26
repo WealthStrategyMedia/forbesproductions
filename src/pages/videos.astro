@@ -1,0 +1,166 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import VideoEmbed from '../components/VideoEmbed.astro';
+import { site } from '../data/site';
+import { natasha } from '../data/content';
+import galleries from '../data/galleries.json';
+import { asset, describe } from '../lib/media';
+
+/**
+ * The live site listed one reel plus a link out to YouTube. Until individual
+ * video IDs are supplied, the secondary tiles link straight to the channel
+ * rather than faking embeds.
+ */
+const channelTiles = [
+  { title: 'Stand-up & comedy specials', media: galleries.items.comedy[0] },
+  { title: 'Red carpet & event coverage', media: galleries.items.redcarpet[0] },
+  { title: 'Fashion runway shows', media: galleries.items.fashion[0] },
+  { title: 'Behind the scenes on Natasha', media: galleries.items.natasha[1] },
+].map((t) => ({ ...t, a: asset(t.media) }));
+---
+
+<Base
+  title="Videos"
+  description="Watch Forbes Productions — production reels, stand-up, red carpet coverage and behind-the-scenes footage."
+>
+  <PageHero
+    eyebrow="Screening room"
+    title="Videos"
+    lede="Our latest productions, behind-the-scenes content and creative showcases."
+    media="promo-brooke-f8b607e2"
+  />
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Featured</p>
+          <h2>Production Reel</h2>
+        </div>
+        <p class="lede">Our latest work showcasing the best of Forbes Productions.</p>
+      </div>
+
+      <div class="feature" data-reveal>
+        <VideoEmbed provider="vimeo" id={natasha.vimeoId} title="Forbes Productions — production reel" poster={natasha.still} />
+      </div>
+    </div>
+  </section>
+
+  <section class="section band">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">Recent work</p>
+          <h2>Latest Videos</h2>
+        </div>
+        <p class="lede">The full catalogue lives on YouTube — films, stand-up, star-studded events, fashion and music.</p>
+      </div>
+
+      <div class="tiles">
+        {channelTiles.map((t, i) => (
+          <a class="tile card" href={site.youtube} target="_blank" rel="noopener noreferrer" data-reveal style={`--reveal-delay:${i * 90}ms`}>
+            <span class="tile-media">
+              <img src={t.a.thumb} width={t.a.width} height={t.a.height} alt={describe(t.media, t.title)} loading="lazy" decoding="async" sizes="(max-width: 900px) 92vw, 24vw" />
+              <span class="tile-play" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M8 5.5v13l11-6.5-11-6.5Z" /></svg>
+              </span>
+            </span>
+            <span class="tile-body">
+              <span class="tile-k">Watch on YouTube</span>
+              <span class="tile-t">{t.title}</span>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="section cta">
+    <div class="wrap cta-inner" data-reveal>
+      <p class="eyebrow eyebrow-plain">Watch more on</p>
+      <h2>Our Channel</h2>
+      <p class="lede">Explore our full channel for exclusive content, interviews and behind-the-scenes footage.</p>
+      <div class="btn-row">
+        <a class="btn btn-lg" href={site.youtube} target="_blank" rel="noopener noreferrer">Visit our channel</a>
+        <a class="btn btn-lg btn-ghost" href={site.youtubeChannel} target="_blank" rel="noopener noreferrer">Forbes Productions channel</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .band { background: var(--ink-2); border-block: 1px solid var(--line); }
+
+  .section-head.split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem 3rem;
+  }
+  .section-head.split .lede { max-width: 44ch; }
+
+  .feature { max-width: 1280px; margin-inline: auto; }
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: clamp(1rem, 1.6vw, 1.5rem);
+  }
+
+  .tile { display: block; text-decoration: none; overflow: hidden; }
+  .tile:hover { transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+
+  .tile-media { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; }
+
+  .tile-media img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(0.72);
+    transition: transform 0.85s var(--ease), filter 0.4s var(--ease);
+  }
+
+  .tile:hover img { transform: scale(1.06); filter: brightness(0.85); }
+
+  .tile-play {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    padding-left: 3px;
+    border-radius: 999px;
+    background: var(--red);
+    color: #fff;
+    transition: transform 0.3s var(--ease);
+  }
+
+  .tile:hover .tile-play { transform: translate(-50%, -50%) scale(1.1); }
+
+  .tile-body { display: grid; gap: 0.3rem; padding: 1.15rem 1.35rem 1.35rem; }
+
+  .tile-k {
+    font-size: 0.64rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .tile-t { font-family: var(--display); font-size: 1.25rem; line-height: 1.2; }
+
+  .cta {
+    text-align: center;
+    background: radial-gradient(60% 100% at 50% 100%, rgba(216, 20, 51, 0.2) 0%, transparent 62%), var(--ink-2);
+    border-top: 1px solid var(--line);
+  }
+
+  .cta-inner .eyebrow { justify-content: center; }
+  .cta-inner .lede { margin: 1.2rem auto 2rem; }
+  .cta-inner .btn-row { justify-content: center; }
+</style>

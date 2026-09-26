@@ -1,0 +1,191 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHero from '../components/PageHero.astro';
+import Figure from '../components/Figure.astro';
+import PhotoGrid from '../components/PhotoGrid.astro';
+import StubForm from '../components/StubForm.astro';
+import { training } from '../data/content';
+import galleries from '../data/galleries.json';
+
+const fields = [
+  { type: 'text', name: 'name', label: 'Full name', required: true, half: true, autocomplete: 'name' },
+  { type: 'email', name: 'email', label: 'Email', required: true, half: true, autocomplete: 'email' },
+  { type: 'tel', name: 'phone', label: 'Phone', half: true, autocomplete: 'tel' },
+  {
+    type: 'select',
+    name: 'interest',
+    label: 'I&rsquo;m interested in',
+    half: true,
+    required: true,
+    options: ['Kundalini Yoga (Zoom, Tuesdays)', 'Personal training', 'Group fitness class', 'BollyX', 'Corporate / expo booking', 'Charity programme'],
+  },
+  { type: 'textarea', name: 'message', label: 'Tell us about your goals', rows: 4 },
+  { type: 'consent', name: 'consent', label: 'I agree to the <a href="/privacy-policy">Privacy Policy</a> and understand my information will be used to respond to my request.', required: true },
+] as const;
+---
+
+<Base
+  title="Training"
+  description="Personal training, Kundalini yoga and group fitness with Brooke Forbes — 20 years across Equinox, Crunch, Gold's Gym and online."
+>
+  <PageHero
+    eyebrow="20 years in the industry"
+    title="Personal"
+    titleAccent="Training"
+    lede={training.lede}
+    media={training.kundalini.media}
+    variant="full"
+  >
+    <div class="btn-row">
+      <a class="btn" href="#enquire">Book a session</a>
+      <a class="btn btn-ghost" href="#certifications">Certifications</a>
+    </div>
+  </PageHero>
+
+  <section class="section">
+    <div class="wrap two">
+      <div class="prose" data-reveal>
+        {training.body.map((p) => <p>{p}</p>)}
+      </div>
+
+      <aside class="kundalini card" data-reveal style="--reveal-delay:110ms">
+        <p class="eyebrow eyebrow-plain">Weekly on Zoom</p>
+        <h2>{training.kundalini.title}</h2>
+        {training.kundalini.body.map((p) => <p>{p}</p>)}
+        <p class="schedule">{training.kundalini.schedule}</p>
+        <a class="btn" href="#enquire">Reserve a spot</a>
+      </aside>
+    </div>
+  </section>
+
+  <section class="section band" id="certifications">
+    <div class="wrap">
+      <div class="section-head" data-reveal>
+        <p class="eyebrow">Qualified</p>
+        <h2>Certifications</h2>
+      </div>
+      <ul class="certs">
+        {training.certifications.map((c, i) => (
+          <li data-reveal style={`--reveal-delay:${i * 70}ms`}>{c}</li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">In practice</p>
+          <h2>Yoga &amp; Wellness</h2>
+        </div>
+        <p class="lede">Kriya practice, sound baths, BollyX and studio sessions.</p>
+      </div>
+      <div data-reveal><PhotoGrid items={galleries.items.yoga} context="Yoga and wellness" row={260} min={300} /></div>
+    </div>
+  </section>
+
+  <section class="section band" id="enquire">
+    <div class="wrap form-wrap">
+      <div class="form-side" data-reveal>
+        <p class="eyebrow">Get started</p>
+        <h2>Train with<br /><span class="em">Brooke</span></h2>
+        <p class="lede">
+          Brooke loves to teach and welcomes all proposals — private sessions, group classes, expos and
+          charity programmes.
+        </p>
+        <Figure media="bollyx-instruction-brooke-forbes" alt="Brooke Forbes teaching BollyX" ratio="4 / 3" sizes="(max-width: 1000px) 92vw, 34vw" class="side-fig" />
+      </div>
+      <div class="form-body card" data-reveal style="--reveal-delay:110ms">
+        <StubForm id="training-enquiry" fields={fields as any} submitLabel="Send enquiry" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .em { font-style: italic; color: var(--gold-soft); }
+  .band { background: var(--ink-2); border-block: 1px solid var(--line); }
+
+  .section-head.split {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.25rem 3rem;
+  }
+
+  .two {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: start;
+  }
+
+  .kundalini {
+    padding: clamp(1.5rem, 2.6vw, 2.4rem);
+    display: grid;
+    gap: 0.9rem;
+    justify-items: start;
+    background:
+      radial-gradient(110% 80% at 50% 0%, rgba(217, 178, 106, 0.12) 0%, transparent 62%),
+      linear-gradient(180deg, var(--surface) 0%, var(--ink-2) 100%);
+  }
+
+  .kundalini h2 { margin: 0; font-size: clamp(1.5rem, 2.2vw, 2rem); }
+  .kundalini p { margin: 0; color: var(--muted); font-size: 0.93rem; }
+
+  .schedule {
+    padding: 0.6rem 1rem;
+    border: 1px solid rgba(217, 178, 106, 0.4);
+    border-radius: 999px;
+    font-size: 0.8rem !important;
+    color: var(--gold-soft) !important;
+  }
+
+  .certs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: clamp(0.75rem, 1.4vw, 1.25rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .certs li {
+    margin: 0;
+    padding: 1.1rem 1.35rem 1.1rem 2.6rem;
+    position: relative;
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    background: var(--surface);
+    font-size: 0.92rem;
+    color: var(--muted);
+  }
+
+  .certs li::before {
+    content: '';
+    position: absolute;
+    left: 1.2rem;
+    top: 1.45em;
+    width: 9px;
+    height: 9px;
+    border-radius: 2px;
+    background: var(--gold);
+    transform: rotate(45deg);
+  }
+
+  .form-wrap {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    gap: clamp(2rem, 4vw, 4rem);
+    align-items: start;
+  }
+
+  .form-side :global(.side-fig) { margin-top: 1.75rem; border-radius: var(--r-lg); overflow: hidden; }
+  .form-body { padding: clamp(1.5rem, 2.6vw, 2.5rem); }
+
+  @media (max-width: 1000px) {
+    .two, .form-wrap { grid-template-columns: 1fr; }
+  }
+</style>

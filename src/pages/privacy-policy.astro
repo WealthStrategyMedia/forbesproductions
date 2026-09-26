@@ -1,0 +1,12 @@
+---
+import Base from '../layouts/Base.astro';
+import LegalPage from '../components/LegalPage.astro';
+import { privacy } from '../data/legal';
+---
+
+<Base
+  title="Privacy Policy"
+  description="How Forbes Productions collects, uses, stores and protects information obtained through forbesproductions.us and related event platforms."
+>
+  <LegalPage title="Privacy Policy" sections={privacy} />
+</Base>
