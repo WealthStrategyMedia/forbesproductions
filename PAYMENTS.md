@@ -100,3 +100,22 @@ backend.
 3. Re-run `npm run build && node scripts/audit.mjs`.
 4. Search the repo for `Tweeble` — every stub mentions it by name, so the search should come back
    empty once the work is finished.
+
+---
+
+## Content feeds (added later)
+
+Events, blog posts and sale items will also be served from Tweeble. The data
+layer is already shaped for that swap:
+
+| Feed | Replace | Read by |
+| --- | --- | --- |
+| Events | `events` array in `src/data/event.ts` | `upcomingEvents`, `pastEvents` — pages never read a single hard-coded event |
+| Blog / press | `press` array in `src/data/content.ts` | `/news`, home, `/about` |
+| Sale items | not yet modelled | — |
+
+Each event carries `status: 'upcoming' | 'past'`. A past event renders its
+listing card in black and white, swaps the "Upcoming" badge for "Past event",
+drops the ticket CTAs, and shows its ticket tiers as a read-only price list
+(`<TicketPicker readonly />`). Set `status` from the Tweeble payload and that
+behaviour follows automatically.

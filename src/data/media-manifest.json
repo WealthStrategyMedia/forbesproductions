@@ -1,5 +1,5 @@
 {
- "generated": "2026-09-26T17:30:18.955Z",
+ "generated": "2026-10-22T04:50:39.985Z",
  "urlToKey": {
   "https://forbesproductions.us/wp-content/uploads/2025/09/FORBES-Blk-Transparent-copy-1.png": "forbes-blk-transparent-copy-1",
   "https://forbesproductions.us/wp-content/uploads/2025/10/ico.png": "ico",
@@ -4046,6 +4046,81 @@
    "thumb": "/media/thumb/mv5byjmwowy2zjutowvmzs00nmzjlwi0nzmtoduyngi5mgviztczxkeyxk.webp",
    "fullBytes": 60250,
    "thumbBytes": 53570
+  },
+  "forbes-wordmark-gold": {
+   "key": "forbes-wordmark-gold",
+   "kind": "image",
+   "animated": false,
+   "width": 900,
+   "height": 260,
+   "aspect": 3.4615,
+   "thumb": "/media/thumb/forbes-wordmark-gold.webp",
+   "full": "/media/full/forbes-wordmark-gold.webp",
+   "thumbBytes": 143812,
+   "fullBytes": 179964,
+   "sources": [
+    "supplied in Context/"
+   ]
+  },
+  "natasha-poster-2026": {
+   "key": "natasha-poster-2026",
+   "kind": "image",
+   "animated": false,
+   "width": 1206,
+   "height": 1222,
+   "aspect": 0.9869,
+   "thumb": "/media/thumb/natasha-poster-2026.webp",
+   "full": "/media/full/natasha-poster-2026.webp",
+   "thumbBytes": 120286,
+   "fullBytes": 239624,
+   "sources": [
+    "supplied in Context/"
+   ]
+  },
+  "brooke-close-up-substack": {
+   "key": "brooke-close-up-substack",
+   "kind": "image",
+   "animated": false,
+   "width": 1024,
+   "height": 1536,
+   "aspect": 0.6667,
+   "thumb": "/media/thumb/brooke-close-up-substack.webp",
+   "full": "/media/full/brooke-close-up-substack.webp",
+   "thumbBytes": 135346,
+   "fullBytes": 221280,
+   "sources": [
+    "supplied in Context/"
+   ]
+  },
+  "tweeble-logo": {
+   "key": "tweeble-logo",
+   "kind": "image",
+   "animated": false,
+   "width": 400,
+   "height": 96,
+   "aspect": 4.1667,
+   "thumb": "/media/thumb/tweeble-logo.webp",
+   "full": "/media/full/tweeble-logo.webp",
+   "thumbBytes": 4598,
+   "fullBytes": 5126,
+   "sources": [
+    "supplied in Context/"
+   ]
+  },
+  "relief-alliance-logo": {
+   "key": "relief-alliance-logo",
+   "kind": "image",
+   "animated": false,
+   "width": 700,
+   "height": 236,
+   "aspect": 2.9661,
+   "thumb": "/media/thumb/relief-alliance-logo.webp",
+   "full": "/media/full/relief-alliance-logo.webp",
+   "thumbBytes": 34272,
+   "fullBytes": 37838,
+   "sources": [
+    "supplied in Context/"
+   ]
   }
  }
 }

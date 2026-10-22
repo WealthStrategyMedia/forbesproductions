@@ -7,6 +7,10 @@ import PartnerStrip from '../components/PartnerStrip.astro';
 import PressCard from '../components/PressCard.astro';
 import { about, capabilities, values, reliefPillars, brooke, press } from '../data/content';
 import galleries from '../data/galleries.json';
+import { causes } from '../data/site';
+import { asset } from '../lib/media';
+
+const reliefLogo = asset(causes[0].media);
 
 const flyerWall = galleries.items.flyers.slice(0, 12);
 const eventWall = galleries.items.redcarpet.slice(0, 9);
@@ -123,6 +127,9 @@ const eventWall = galleries.items.redcarpet.slice(0, 9);
       </div>
 
       <div class="relief-intro prose" data-reveal>
+        <a class="relief-mark" href={causes[0].href} target="_blank" rel="noopener noreferrer">
+          <img src={reliefLogo.full} width={reliefLogo.width} height={reliefLogo.height} alt={causes[0].name} loading="lazy" decoding="async" />
+        </a>
         {about.relief.body.map((p) => <p>{p}</p>)}
       </div>
 
@@ -281,6 +288,9 @@ const eventWall = galleries.items.redcarpet.slice(0, 9);
   }
 
   .relief-intro { max-width: 78ch; font-size: 1.05rem; }
+
+  .relief-mark { display: block; width: fit-content; margin-bottom: 1.5rem; }
+  .relief-mark img { width: auto; height: clamp(52px, 5vw, 72px); }
 
   .teenx {
     margin: clamp(2rem, 3.5vw, 3rem) 0;

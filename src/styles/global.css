@@ -36,11 +36,11 @@
   --shadow-lift: 0 30px 70px -24px rgba(0, 0, 0, 0.9);
 
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --header-h: 80px;
+  --header-h: 92px;
 }
 
 @media (max-width: 860px) {
-  :root { --header-h: 66px; }
+  :root { --header-h: 76px; }
 }
 
 /* ============================================================== reset ===== */

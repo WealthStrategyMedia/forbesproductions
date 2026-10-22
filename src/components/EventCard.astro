@@ -8,12 +8,13 @@ interface Props {
 }
 const { variant = 'full' } = Astro.props;
 const a = asset(event.hero);
+const isPast = event.status === 'past';
 ---
 
-<article class:list={['ev', 'card', `ev-${variant}`]}>
+<article class:list={['ev', 'card', `ev-${variant}`, isPast && 'is-past']}>
   <a class="ev-media" href={`/events/${event.slug}`} tabindex="-1" aria-hidden="true">
     <img src={a.full} width={a.width} height={a.height} alt="" loading="lazy" decoding="async" sizes="(max-width: 900px) 92vw, 46vw" />
-    <span class="ev-badge">Upcoming</span>
+    <span class="ev-badge">{isPast ? 'Past event' : 'Upcoming'}</span>
   </a>
 
   <div class="ev-body">
@@ -36,11 +37,18 @@ const a = asset(event.hero);
       </div>
     </dl>
 
-    <div class="btn-row ev-actions">
-      <a class="btn" href={`/events/${event.slug}#tickets`}>Purchase Tickets</a>
-      <a class="btn btn-ghost" href={`/events/${event.slug}#sponsor`}>Sponsor Event</a>
-      <a class="btn btn-ghost" href={`/events/${event.slug}`}>View Event</a>
-    </div>
+    {isPast ? (
+      <div class="btn-row ev-actions">
+        <a class="btn btn-ghost" href={`/events/${event.slug}`}>View Event</a>
+        <a class="btn btn-ghost" href="/gallery#redcarpet">See the photos</a>
+      </div>
+    ) : (
+      <div class="btn-row ev-actions">
+        <a class="btn" href={`/events/${event.slug}#tickets`}>Purchase Tickets</a>
+        <a class="btn btn-ghost" href={`/events/${event.slug}#sponsor`}>Sponsor Event</a>
+        <a class="btn btn-ghost" href={`/events/${event.slug}`}>View Event</a>
+      </div>
+    )}
   </div>
 </article>
 
@@ -83,6 +91,27 @@ const a = asset(event.hero);
     letter-spacing: 0.2em;
     text-transform: uppercase;
   }
+
+  /* ----------------------------------------------------------- past ---- */
+  /*
+   * A finished event reads as an archive entry: the photograph goes black and
+   * white and the accent colours drain out, so an upcoming event is obvious at
+   * a glance in a mixed list.
+   */
+  .is-past .ev-media img { filter: grayscale(1) contrast(1.04) brightness(0.86); }
+  .is-past:hover .ev-media img { filter: grayscale(1) contrast(1.06) brightness(0.95); }
+
+  .is-past .ev-badge {
+    background: rgba(245, 242, 235, 0.14);
+    border: 1px solid var(--line-strong);
+    color: var(--muted);
+    backdrop-filter: blur(6px);
+  }
+
+  .is-past .ev-sub,
+  .is-past .ev-meta dt { color: var(--faint); }
+  .is-past .ev-title a:hover { color: var(--paper); }
+  .is-past { opacity: 0.94; }
 
   .ev-body {
     display: grid;

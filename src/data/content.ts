@@ -2,6 +2,16 @@
 
 export const press = [
   {
+    title: 'Brooke Forbes is ready for her close up',
+    source: 'Dr. Manaiza · 90210 Tutor',
+    date: 'October 1, 2026',
+    excerpt:
+      'The actress, comedian, producer and performer has spent years mastering the difficult art of making audiences laugh, feel and believe. Now, as Hollywood searches for performances with lived-in emotional truth, Forbes appears ready for the role that could put her in the awards conversation.',
+    href: 'https://90210tutor.substack.com/p/brooke-forbes-is-ready-for-her-close',
+    media: 'brooke-close-up-substack',
+    featured: true,
+  },
+  {
     title: 'Aiden McNally and Jeremy McNally, founders of Relief Alliance, shine on The Stained Red Carpet',
     source: 'Relief Alliance on Medium',
     date: 'Wednesday, October 8, 2025',
@@ -131,7 +141,10 @@ export const natasha = {
   title: 'Natasha: Mail Order Bride',
   subtitle: 'Escape to America',
   status: 'Coming 2026',
-  poster: 'poster-natasha-1',
+  /** Current 'Coming Soon' key art — use this wherever the film is featured. */
+  poster: 'natasha-poster-2026',
+  /** Earlier one-sheet, kept for the gallery. */
+  posterLegacy: 'poster-natasha-1',
   still: 'mv5byjmwowy2zjutowvmzs00nmzjlwi0nzmtoduyngi5mgviztczxkeyxk',
   externalSite: 'http://www.natashamailorderbride.com/',
   vimeoId: '313488082',

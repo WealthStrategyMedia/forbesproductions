@@ -2,12 +2,20 @@
  * The Stained Red Carpet — copy, ticket tiers and sponsorship packages,
  * transcribed from forbesproductions.us/stained-red-carpet/.
  *
- * Ticket and sponsor purchases are wired to Tweeble later; see PAYMENTS.md.
- * Prices here are the source of truth for the on-page order summary only.
+ * Events, blog posts and sale items will all be served from Tweeble later, so
+ * this file is shaped as a list with a `status` on each entry rather than a
+ * single hard-coded event: swapping in the API means replacing the `events`
+ * array, not rewriting the pages that read it. See PAYMENTS.md.
+ *
+ * Ticket and sponsor purchases are also wired to Tweeble later. Prices here
+ * are the source of truth for the on-page order summary only.
  */
+
+export type EventStatus = 'upcoming' | 'past';
 
 export const event = {
   slug: 'stained-red-carpet',
+  status: 'past' as EventStatus,
   title: 'Stained Red Carpet',
   subtitle: "Hollywood's Ultimate Celebrity Experience",
   dateLabel: 'February 7th · 6:00 PM – 9:30 PM PT',
@@ -80,6 +88,22 @@ export const event = {
     'On-site brand activations and step-and-repeat moments',
     'Access to our VIP network of investors, talent and creatives',
   ],
+};
+
+/**
+ * The full programme. Replace this array with the Tweeble events feed; the
+ * pages only ever read `events`, `upcomingEvents` and `pastEvents`.
+ */
+export const events = [event];
+
+export const upcomingEvents = events.filter((e) => e.status === 'upcoming');
+export const pastEvents = events.filter((e) => e.status === 'past');
+
+/** Shown wherever an upcoming event would go while the calendar is empty. */
+export const nextEventPlaceholder = {
+  eyebrow: 'Dates to be announced',
+  title: 'The next Stained Red Carpet is being planned',
+  body: 'New dates, venue and ticket tiers are announced here first. Join the list and we will tell you the moment they are live.',
 };
 
 export type Ticket = {

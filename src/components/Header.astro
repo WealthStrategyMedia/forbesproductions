@@ -2,7 +2,7 @@
 import { nav, navCta, site } from '../data/site';
 import { asset } from '../lib/media';
 
-const logo = asset('forbes-blk-transparent-copy-1');
+const logo = asset('forbes-wordmark-gold');
 const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
 const isActive = (href: string) => (href === '/' ? path === '/' : path === href || path.startsWith(href + '/'));
 ---
@@ -28,7 +28,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
     </nav>
 
     <div class="hdr-actions">
-      <a class="btn btn-sm hdr-cta" href="/events/stained-red-carpet#tickets">Tickets</a>
+      <a class="btn btn-sm hdr-cta" href="/events">Events</a>
       <a class="nav-link hdr-contact" href={navCta.href}>{navCta.label}</a>
       <button class="burger" type="button" aria-expanded="false" aria-controls="mobile-nav" aria-label="Open menu" data-burger>
         <span></span><span></span><span></span>
@@ -46,7 +46,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
       ))}
       <li><a href="/contact" class:list={[isActive('/contact') && 'is-active']}>Contact</a></li>
     </ul>
-    <a class="btn btn-lg mnav-cta" href="/events/stained-red-carpet#tickets">Purchase Tickets</a>
+    <a class="btn btn-lg mnav-cta" href="/events">See Events</a>
   </nav>
 </div>
 
@@ -85,7 +85,7 @@ const isActive = (href: string) => (href === '/' ? path === '/' : path === href 
 
   .brand img {
     width: auto;
-    height: clamp(30px, 2.6vw, 40px);
+    height: clamp(38px, 3.6vw, 54px);
     /* Artwork is already white-on-transparent despite the "Blk" filename. */
   }
 

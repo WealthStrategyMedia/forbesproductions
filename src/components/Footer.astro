@@ -1,10 +1,11 @@
 ---
-import { site, socials, extraSocials, footerNav, credits } from '../data/site';
+import { site, socials, extraSocials, footerNav, credits, causes, poweredBy } from '../data/site';
 import { asset } from '../lib/media';
 import SocialIcon from './SocialIcon.astro';
 
-const logo = asset('forbes-blk-transparent-copy-1');
-const relief = asset('relief-6-1-1');
+const logo = asset('forbes-wordmark-gold');
+const causeLogos = causes.map((cause) => ({ cause, a: asset(cause.media) }));
+const tweeble = asset(poweredBy.media);
 const year = new Date().getFullYear();
 ---
 
@@ -57,16 +58,23 @@ const year = new Date().getFullYear();
       </div>
 
       <div class="ftr-col ftr-cause">
-        <h2 class="ftr-h">Proudly supporting</h2>
-        <a class="ftr-relief" href="https://reliefalliance.org/" target="_blank" rel="noopener noreferrer">
-          <img src={relief.thumb} width={relief.width} height={relief.height} alt="Relief Alliance" loading="lazy" decoding="async" />
-        </a>
-        <p class="ftr-blurb">
-          A portion of all proceeds from Forbes Productions events and projects goes directly to Relief Alliance,
-          a 501(c)(3) nonprofit providing emergency and rehabilitative care across the United States.
-        </p>
+        <h2 class="ftr-h">Nonprofits we support</h2>
+        {causeLogos.map(({ cause, a }) => (
+          <a class="ftr-relief" href={cause.href} target="_blank" rel="noopener noreferrer">
+            <img src={a.full} width={a.width} height={a.height} alt={cause.name} loading="lazy" decoding="async" />
+          </a>
+        ))}
+        <p class="ftr-blurb">{causes[0].blurb}</p>
         <a class="btn btn-ghost btn-sm" href="/events/stained-red-carpet#sponsor">Become a sponsor</a>
       </div>
+    </div>
+
+    <div class="ftr-powered">
+      <a class="ftr-tweeble" href={poweredBy.href} target="_blank" rel="noopener noreferrer">
+        <span>Powered by</span>
+        <img src={tweeble.full} width={tweeble.width} height={tweeble.height} alt={poweredBy.name} loading="lazy" decoding="async" />
+      </a>
+      <p class="ftr-blurb">{poweredBy.blurb}</p>
     </div>
 
     <div class="ftr-bottom">
@@ -74,6 +82,7 @@ const year = new Date().getFullYear();
       <p class="ftr-credit">
         Developed by <a href={credits.developer.href} target="_blank" rel="noopener noreferrer">{credits.developer.name}</a>.
         Media by <a href={credits.media.href} target="_blank" rel="noopener noreferrer">{credits.media.name}</a>.
+        Powered by <a href={poweredBy.href} target="_blank" rel="noopener noreferrer">{poweredBy.name}</a>.
       </p>
       <p class="ftr-links">
         <a href="/privacy-policy">Privacy Policy</a>
@@ -104,7 +113,7 @@ const year = new Date().getFullYear();
 
   .ftr-brand img {
     width: auto;
-    height: 40px;
+    height: 56px;
     margin-bottom: 1.25rem;
   }
 
@@ -199,6 +208,42 @@ const year = new Date().getFullYear();
   }
 
   .ftr-cause .btn { margin-top: 1.25rem; }
+
+  /* ------------------------------------------------------- powered by -- */
+  .ftr-powered {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.9rem 2rem;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--line);
+  }
+
+  .ftr-tweeble {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.85rem;
+    text-decoration: none;
+    flex: none;
+  }
+
+  .ftr-tweeble span {
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.24em;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  .ftr-tweeble img {
+    width: auto;
+    height: 30px;
+    opacity: 0.9;
+    transition: opacity 0.25s var(--ease), transform 0.25s var(--ease);
+  }
+
+  .ftr-tweeble:hover img { opacity: 1; transform: translateY(-1px); }
+  .ftr-powered .ftr-blurb { flex: 1 1 24rem; font-size: 0.82rem; }
 
   .ftr-bottom {
     display: flex;

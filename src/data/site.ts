@@ -56,8 +56,31 @@ export const footerNav = [
   { label: 'Contact', href: '/contact' },
 ] as const;
 
+/**
+ * Nonprofits Forbes Productions supports. Relief Alliance is the first;
+ * others will be added here as they come on board.
+ */
+export const causes = [
+  {
+    name: 'Relief Alliance',
+    media: 'relief-alliance-logo',
+    href: 'https://reliefalliance.org/',
+    blurb:
+      'A 501(c)(3) providing emergency aid, long-term rehabilitation and youth empowerment to communities across the United States. A portion of all proceeds from Forbes Productions events and projects goes directly to their programs.',
+  },
+] as const;
+
+/** The platform this site runs on. */
+export const poweredBy = {
+  name: 'Tweeble',
+  media: 'tweeble-logo',
+  href: 'https://tweeble.com',
+  blurb: 'Events, ticketing, fundraising and bookings for this site are powered by Tweeble.',
+};
+
 export const partners = [
-  { name: 'Relief Alliance', media: 'relief-6-1-1', href: 'https://reliefalliance.org/' },
+  { name: 'Relief Alliance', media: 'relief-alliance-logo', href: 'https://reliefalliance.org/' },
+  { name: 'Tweeble', media: 'tweeble-logo', href: 'https://tweeble.com' },
   { name: 'Wealth Strategy Media', media: 'wsm', href: 'https://wealthstrategymedia.com/' },
   { name: 'McNally Software', media: 'untitled-270-x-60-px-1-1', href: 'https://mcnallysoftware.com/' },
   { name: 'Malibu Education', media: 'malibu-education-logo', href: null },

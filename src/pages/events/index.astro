@@ -3,7 +3,7 @@ import Base from '../../layouts/Base.astro';
 import PageHero from '../../components/PageHero.astro';
 import EventCard from '../../components/EventCard.astro';
 import PhotoGrid from '../../components/PhotoGrid.astro';
-import { event } from '../../data/event';
+import { event, upcomingEvents, pastEvents, nextEventPlaceholder } from '../../data/event';
 import galleries from '../../data/galleries.json';
 
 const pastNight = [...galleries.items.redcarpet.slice(0, 6), ...galleries.items.fashion.slice(0, 6)];
@@ -26,13 +26,22 @@ const pastNight = [...galleries.items.redcarpet.slice(0, 6), ...galleries.items.
         <p class="eyebrow">Upcoming</p>
         <h2>Next on the Carpet</h2>
       </div>
-      <div data-reveal><EventCard /></div>
+
+      {upcomingEvents.length > 0 ? (
+        <div data-reveal><EventCard /></div>
+      ) : (
+        <div class="placeholder card" data-reveal>
+          <p class="eyebrow eyebrow-plain">{nextEventPlaceholder.eyebrow}</p>
+          <h3>{nextEventPlaceholder.title}</h3>
+          <p class="lede">{nextEventPlaceholder.body}</p>
+          <div class="btn-row">
+            <a class="btn" href="/contact">Tell me when tickets open</a>
+            <a class="btn btn-ghost" href={`/events/${event.slug}#sponsor`}>Sponsor the next one</a>
+          </div>
+        </div>
+      )}
 
       <div class="quick" data-reveal>
-        <a class="quick-item" href={`/events/${event.slug}#tickets`}>
-          <span class="quick-k">Tickets</span>
-          <span class="quick-v">From $28.52</span>
-        </a>
         <a class="quick-item" href={`/events/${event.slug}#sponsor`}>
           <span class="quick-k">Sponsorship</span>
           <span class="quick-v">$250 – $50,000</span>
@@ -45,9 +54,28 @@ const pastNight = [...galleries.items.redcarpet.slice(0, 6), ...galleries.items.
           <span class="quick-k">Event gallery</span>
           <span class="quick-v">Attendee downloads</span>
         </a>
+        <a class="quick-item" href="/contact">
+          <span class="quick-k">Enquiries</span>
+          <span class="quick-v">Book or collaborate</span>
+        </a>
       </div>
     </div>
   </section>
+
+  {pastEvents.length > 0 && (
+    <section class="section band">
+      <div class="wrap">
+        <div class="section-head split" data-reveal>
+          <div>
+            <p class="eyebrow">Archive</p>
+            <h2>Past Events</h2>
+          </div>
+          <p class="lede">{pastEvents.length} event{pastEvents.length === 1 ? '' : 's'} in the books.</p>
+        </div>
+        <div data-reveal><EventCard /></div>
+      </div>
+    </section>
+  )}
 
   <section class="section band">
     <div class="wrap">
@@ -110,4 +138,19 @@ const pastNight = [...galleries.items.redcarpet.slice(0, 6), ...galleries.items.
   }
 
   .quick-v { font-family: var(--display); font-size: 1.25rem; }
+
+  .placeholder {
+    display: grid;
+    gap: 0.75rem;
+    justify-items: start;
+    padding: clamp(1.75rem, 3.5vw, 3.25rem);
+    border-style: dashed;
+    background:
+      radial-gradient(110% 90% at 50% 0%, rgba(217, 178, 106, 0.08) 0%, transparent 62%),
+      linear-gradient(180deg, var(--surface) 0%, var(--ink-2) 100%);
+  }
+
+  .placeholder h3 { margin: 0; font-size: clamp(1.5rem, 2.6vw, 2.4rem); }
+  .placeholder .lede { max-width: 58ch; }
+  .placeholder .btn-row { margin-top: 0.75rem; }
 </style>

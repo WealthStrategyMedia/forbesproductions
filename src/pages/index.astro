@@ -10,6 +10,7 @@ import VideoEmbed from '../components/VideoEmbed.astro';
 import { asset } from '../lib/media';
 import { site } from '../data/site';
 import { press, services, natasha, brooke } from '../data/content';
+import { upcomingEvents } from '../data/event';
 import galleries from '../data/galleries.json';
 
 const hero = asset('great-2-red-carpet');
@@ -41,7 +42,7 @@ const featured = press.slice(0, 3);
           red carpet experiences. <strong>Female driven. Cinematic taste. Unapologetically bold.</strong>
         </p>
         <div class="btn-row">
-          <a class="btn btn-lg" href="/events/stained-red-carpet#tickets">Purchase Tickets</a>
+          <a class="btn btn-lg" href="/events">See Events</a>
           <a class="btn btn-lg btn-ghost" href="#services">Explore Services</a>
           <a class="btn btn-lg btn-ghost" href="/gallery">View Gallery</a>
         </div>
@@ -124,9 +125,14 @@ const featured = press.slice(0, 3);
   <!-- ─────────────────────────────────────────────────────────── event -->
   <section class="section event-band">
     <div class="wrap">
-      <div class="section-head" data-reveal>
-        <p class="eyebrow">Next on the carpet</p>
-        <h2>Upcoming Event</h2>
+      <div class="section-head split" data-reveal>
+        <div>
+          <p class="eyebrow">{upcomingEvents.length ? 'Next on the carpet' : 'Most recent'}</p>
+          <h2>{upcomingEvents.length ? 'Upcoming Event' : 'Latest Event'}</h2>
+        </div>
+        {!upcomingEvents.length && (
+          <p class="lede">New dates are announced on the events page — and to the list first.</p>
+        )}
       </div>
       <div data-reveal><EventCard variant="compact" /></div>
     </div>
@@ -317,7 +323,7 @@ const featured = press.slice(0, 3);
     height: 100%;
     object-fit: cover;
     object-position: 62% 26%;
-    filter: saturate(0.82) contrast(1.06) brightness(0.8);
+    filter: saturate(0.88) contrast(1.06) brightness(0.92);
     transform: scale(1.04);
   }
 
@@ -333,7 +339,7 @@ const featured = press.slice(0, 3);
     z-index: -1;
     background:
       radial-gradient(62% 75% at 10% 38%, rgba(216, 20, 51, 0.26) 0%, transparent 62%),
-      linear-gradient(100deg, rgba(8, 7, 11, 0.95) 0%, rgba(8, 7, 11, 0.86) 34%, rgba(8, 7, 11, 0.42) 62%, rgba(8, 7, 11, 0.24) 100%),
+      linear-gradient(100deg, rgba(8, 7, 11, 0.95) 0%, rgba(8, 7, 11, 0.84) 28%, rgba(8, 7, 11, 0.3) 54%, rgba(8, 7, 11, 0.12) 100%),
       linear-gradient(180deg, rgba(8, 7, 11, 0.5) 0%, transparent 22%, transparent 62%, var(--ink) 100%);
   }
 

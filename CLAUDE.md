@@ -54,3 +54,12 @@ Tweeble integration. Each shows a `PendingNotice`. **Do not "fix" them into work
 - `PhotoGrid` has two variants. Use `variant="masonry"` for posters and flyers so the artwork is
   not cropped; the default `mosaic` crops to a uniform rhythm and is right for photographs.
 - Astro frontmatter cannot host a multi-line `export type` union — put shared types in `src/lib/`.
+
+- Partner and brand logos arrive as dark artwork on white or transparent, which
+  disappears on the dark shell. `scripts/add-assets.mjs` has `keyWhiteBackground`
+  (knocks out a white studio background) and `relightDarkInk` (recolours neutral
+  dark ink to ivory while leaving saturated colour alone, so e.g. Relief
+  Alliance keeps its green leaf). Run new logos through one of them.
+- Events carry `status: 'upcoming' | 'past'`. Past events are greyscale listing
+  cards with no ticket CTAs — see PAYMENTS.md. Do not hard-code a single event;
+  pages read `upcomingEvents` / `pastEvents`.

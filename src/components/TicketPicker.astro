@@ -8,9 +8,15 @@
  */
 import { tickets, event } from '../data/event';
 import PendingNotice from './PendingNotice.astro';
+
+interface Props {
+  /** A closed sale renders the tiers as a read-only price list. */
+  readonly?: boolean;
+}
+const { readonly = false } = Astro.props;
 ---
 
-<div class="tix" id="tickets" data-tickets>
+<div class:list={['tix', readonly && 'is-readonly']} data-tickets={readonly ? undefined : true}>
   <div class="tix-list">
     {tickets.map((t) => (
       <div class:list={['tix-row', t.featured && 'is-featured']} data-ticket={t.id} data-price={t.price}>
@@ -23,7 +29,7 @@ import PendingNotice from './PendingNotice.astro';
           <span class="cur">$</span>{t.price.toFixed(2).replace(/\.00$/, '')}
         </p>
 
-        <div class="qty" role="group" aria-label={`Quantity for ${t.name}`}>
+        {!readonly && <div class="qty" role="group" aria-label={`Quantity for ${t.name}`}>
           <button type="button" class="qty-btn" data-step="-1" aria-label={`Remove one ${t.name}`}>&minus;</button>
           <input
             class="qty-input"
@@ -37,12 +43,12 @@ import PendingNotice from './PendingNotice.astro';
             data-qty
           />
           <button type="button" class="qty-btn" data-step="1" aria-label={`Add one ${t.name}`}>+</button>
-        </div>
+        </div>}
       </div>
     ))}
   </div>
 
-  <aside class="tix-summary card" aria-label="Order summary">
+  {!readonly && <aside class="tix-summary card" aria-label="Order summary">
     <h3 class="tix-sum-h">Order Summary</h3>
 
     <ul class="tix-sum-list" data-summary>
@@ -75,10 +81,13 @@ import PendingNotice from './PendingNotice.astro';
     <p class="tix-fine">
       Every ticket supports Relief Alliance. {event.venue} · {event.dateLabel}.
     </p>
-  </aside>
+  </aside>}
 </div>
 
 <style>
+  .is-readonly { grid-template-columns: minmax(0, 1fr) !important; opacity: 0.72; }
+  .is-readonly .tix-row { filter: grayscale(1); }
+
   .tix {
     display: grid;
     grid-template-columns: minmax(0, 1.65fr) minmax(320px, 0.85fr);
