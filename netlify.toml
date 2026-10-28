@@ -35,7 +35,6 @@
   to = "/videos"
   status = 301
 
-[[redirects]]
-  from = "/*"
-  to = "/404"
-  status = 404
+# No catch-all 404 redirect: Astro emits dist/404.html, which Netlify serves
+# automatically for unmatched paths. A redirect to "/404" would look for
+# /404/index.html, which this build does not produce.
