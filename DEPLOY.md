@@ -59,12 +59,28 @@ only two records avoids that risk entirely.
 GoDaddy: **My Products → Domains → `forbesproductions.us` → DNS → Manage Zones**
 (or **DNS → Records**).
 
+### The zone as it stands today
+
+Read from public DNS on 2026-10-28:
+
+| Record | Current value | Action |
+| --- | --- | --- |
+| `NS` | `ns21.domaincontrol.com`, `ns22.domaincontrol.com` | Leave — GoDaddy's own nameservers, which is what we want |
+| `A` `@` | `160.153.0.84` (GoDaddy hosting — the WordPress site) | **Change to `75.2.60.5`** |
+| `CNAME` `www` | `forbesproductions.us` | **Change to `<site>.netlify.app`** |
+| `MX` | none | Nothing to protect — no email is routed on this domain |
+| `TXT` | none | Nothing to protect — no SPF/DKIM/verification records |
+| `AAAA` | none | — |
+
+Because there is no MX or TXT, the usual risk of breaking email during a DNS
+change does not apply here.
+
 ### Before you change anything
 
-- Screenshot or export the current zone. You will want it if anything needs
-  rolling back.
-- **Do not touch MX, TXT or any Google/Microsoft verification records.** Only
-  the two records below change.
+- Screenshot or export the current zone. Public DNS only shows what resolves;
+  GoDaddy's editor may list extra rows (parked records, subdomains, a
+  `_domainconnect` CNAME). The screenshot is your rollback.
+- Leave `_domainconnect` alone if present — it is GoDaddy plumbing, harmless.
 - If **Forwarding** is set up on the domain (GoDaddy → Domain Settings →
   Forwarding), delete it. Forwarding overrides A records and will break the site.
 
